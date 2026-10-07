@@ -12,8 +12,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // ILAGAY ANG IYONG PUBLIC KEY DITO
-            emailjs.init("YOUR_PUBLIC_KEY"); 
+            emailjs.init("0mxhMsjxyYfnnhBIn");
         })();
     </script>
 </head>
@@ -45,7 +44,7 @@
         </div>
     </header>
 
-    <!-- HERO & MAIN CONTENT -->
+    <!-- MAIN CONTENT -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 w-full flex-1 space-y-8">
 
         <!-- WELCOME BANNER -->
@@ -246,7 +245,6 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-[11px] text-slate-500">
         <p>© 2026 Edulink Solutions. All Rights Reserved. Registrar Document Portal.</p>
     </footer>
@@ -336,13 +334,15 @@
             requests.push(requestRecord);
             localStorage.setItem('doc_requests', JSON.stringify(requests));
 
-            // AUTO SEND EMAIL VIA EMAILJS
             const docObj = DOCUMENT_TYPES.find(d => d.id === tempFormData.docType);
-            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+            const docName = docObj ? docObj.name : tempFormData.docType;
+
+            // AUTO SEND CONFIRMATION EMAIL VIA EMAILJS
+            emailjs.send("service_gwymlqw", "template_kx4ylfq", {
                 to_name: tempFormData.fullName,
                 to_email: tempFormData.email,
                 ref_code: refCode,
-                doc_name: docObj ? docObj.name : tempFormData.docType,
+                doc_name: docName,
                 status: 'PENDING (Under Verification)',
                 claim_method: tempFormData.claimMethod,
                 delivery_address: tempFormData.deliveryAddress
