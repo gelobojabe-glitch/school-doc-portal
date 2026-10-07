@@ -21,7 +21,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- HEADER -->
+    <!-- HEADER (WALA NANG ADMIN BUTTON) -->
     <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -36,9 +36,6 @@
             <div class="flex items-center space-x-2">
                 <button onclick="switchTab('request')" id="nav-request" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-600 text-white transition">Request Form</button>
                 <button onclick="switchTab('tracker')" id="nav-tracker" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition">Status Tracker</button>
-                <button onclick="toggleModal('adminModal')" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-lock mr-1"></i> Admin
-                </button>
             </div>
         </div>
     </header>
@@ -119,7 +116,7 @@
         <div id="tab-tracker" class="hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <h2 class="text-lg font-bold text-slate-800 mb-1">Track Request Status</h2>
-                <p class="text-xs text-slate-500 mb-6">Enter your 11-digit Reference Code (e.g., DOC-2026-XXXX) to check current progress.</p>
+                <p class="text-xs text-slate-500 mb-6">Enter your Reference Code (e.g., DOC-2026-XXXX) to check current progress.</p>
 
                 <div class="flex gap-2 mb-6">
                     <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500 uppercase">
@@ -144,41 +141,9 @@
             </div>
         </div>
 
-        <!-- TAB 3: ADMIN DASHBOARD -->
-        <div id="tab-admin" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-800">Registrar Request Management</h2>
-                        <p class="text-xs text-slate-500">Manage incoming student document requests and updates.</p>
-                    </div>
-                    <button onclick="switchTab('request')" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-md font-semibold transition">Logout</button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 uppercase">
-                                <th class="p-3">Ref Code</th>
-                                <th class="p-3">Student Name</th>
-                                <th class="p-3">Document</th>
-                                <th class="p-3">GCash Ref</th>
-                                <th class="p-3">Receipt</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminTableBody">
-                            <tr><td colspan="7" class="p-4 text-center text-slate-400">No requests found.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- PAYMENT MODAL (WITH FIXED SCROLL & MAX-HEIGHT) -->
+    <!-- PAYMENT MODAL -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 relative space-y-4 max-h-[90vh] overflow-y-auto">
             <button onclick="toggleModal('paymentModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -200,32 +165,11 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot (Simulation) *</label>
+                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot *</label>
                 <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
             </div>
 
             <button onclick="confirmSubmission()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition">Confirm & Complete Request</button>
-        </div>
-    </div>
-
-    <!-- VIEW RECEIPT MODAL -->
-    <div id="viewReceiptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl relative space-y-3 text-center max-h-[90vh] overflow-y-auto">
-            <button onclick="toggleModal('viewReceiptModal')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-            <h4 class="font-bold text-slate-800 text-sm">Uploaded Payment Receipt</h4>
-            <div class="p-2 border rounded-lg bg-slate-50">
-                <img id="receiptModalImage" src="" alt="GCash Receipt" class="w-full rounded">
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xs w-full p-6 relative space-y-4">
-            <button onclick="toggleModal('adminModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-slate-800">Admin Login</h3>
-            <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full px-3 py-2 border rounded-lg text-sm outline-none">
-            <button onclick="loginAdmin()" class="w-full py-2 bg-slate-900 text-white text-xs font-bold uppercase rounded-lg shadow hover:bg-slate-800 transition">Login</button>
         </div>
     </div>
 
@@ -253,7 +197,7 @@
         }
 
         function switchTab(tab) {
-            ['request', 'tracker', 'admin'].forEach(t => {
+            ['request', 'tracker'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`nav-${t}`);
                 if (btn) btn.className = "px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition";
@@ -326,61 +270,6 @@
                 alert('Reference Code not found.');
                 resDiv.classList.add('hidden');
             }
-        }
-
-        function loginAdmin() {
-            if (document.getElementById('adminPass').value === 'admin123') {
-                toggleModal('adminModal');
-                switchTab('admin');
-                loadAdminData();
-            } else {
-                alert('Incorrect password!');
-            }
-        }
-
-        function loadAdminData() {
-            const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
-            const tbody = document.getElementById('adminTableBody');
-            if (requests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">No requests found.</td></tr>';
-                return;
-            }
-            tbody.innerHTML = requests.map((r, i) => {
-                const docObj = DOCUMENT_TYPES.find(d => d.id === r.docType);
-                return `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-bold text-slate-800">${r.refCode}</td>
-                    <td class="p-3">${r.fullName}</td>
-                    <td class="p-3">${docObj ? docObj.name : r.docType}</td>
-                    <td class="p-3 font-mono">${r.gcashRef}</td>
-                    <td class="p-3">
-                        <button onclick="showReceipt()" class="text-xs text-brand-600 hover:underline flex items-center gap-1">
-                            <i class="fa-regular fa-image"></i> View
-                        </button>
-                    </td>
-                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-700">${r.status}</span></td>
-                    <td class="p-3">
-                        <select onchange="updateStatus(${i}, this.value)" class="text-xs border p-1 rounded bg-white outline-none">
-                            <option value="PENDING" ${r.status==='PENDING'?'selected':''}>Pending</option>
-                            <option value="PROCESSING" ${r.status==='PROCESSING'?'selected':''}>Processing</option>
-                            <option value="READY" ${r.status==='READY'?'selected':''}>Ready for Pickup</option>
-                            <option value="COMPLETED" ${r.status==='COMPLETED'?'selected':''}>Completed</option>
-                        </select>
-                    </td>
-                </tr>
-            `}).join('');
-        }
-
-        function showReceipt() {
-            document.getElementById('receiptModalImage').src = "https://via.placeholder.com/300x500?text=GCash+Receipt+Sample";
-            toggleModal('viewReceiptModal');
-        }
-
-        function updateStatus(index, newStatus) {
-            let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
-            requests[index].status = newStatus;
-            localStorage.setItem('doc_requests', JSON.stringify(requests));
-            loadAdminData();
         }
     </script>
 </body>
