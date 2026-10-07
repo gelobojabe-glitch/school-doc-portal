@@ -5,30 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edulink Solutions - School Document Request Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' } }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
     <!-- HEADER -->
-    <header class="bg-slate-900 text-white shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-blue-600 text-white p-2 rounded-xl shadow-lg">
-                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 p-2 rounded-lg text-white shadow-md">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">Edulink Solutions</h1>
+                    <h1 class="font-bold text-base leading-tight">Edulink Solutions</h1>
                     <p class="text-xs text-slate-400">School Document Request Portal</p>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="switchTab('request')" id="nav-request" class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white transition">Request Document</button>
-                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-4 py-2 text-sm font-semibold rounded-lg text-slate-300 hover:text-white transition">Status Tracker</button>
-                <button onclick="toggleModal('adminModal')" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">
+            <div class="flex items-center space-x-2">
+                <button onclick="switchTab('request')" id="nav-request" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-600 text-white transition">Request Form</button>
+                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition">Status Tracker</button>
+                <button onclick="toggleModal('adminModal')" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-lock mr-1"></i> Admin
                 </button>
             </div>
@@ -40,46 +48,48 @@
 
         <!-- TAB 1: REQUEST FORM -->
         <div id="tab-request" class="space-y-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h2 class="text-xl font-bold text-slate-800 mb-1">Student Document Request Form</h2>
-                <p class="text-sm text-slate-500 mb-6">Please fill in your details accurately to request official school documents.</p>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-900 text-white p-6">
+                    <h2 class="text-lg font-bold">Online Document Application</h2>
+                    <p class="text-xs text-slate-400">Fill in the required information to request official school documents.</p>
+                </div>
 
-                <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Student ID Number *</label>
-                            <input type="text" id="studentId" required placeholder="2023-01234" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="studentId" required placeholder="e.g. 2023-01234" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Full Name *</label>
-                            <input type="text" id="fullName" required placeholder="Juan Dela Cruz" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="fullName" required placeholder="Juan Dela Cruz" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email Address *</label>
-                            <input type="email" id="email" required placeholder="juan@example.com" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="email" id="email" required placeholder="student@example.com" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Mobile Number *</label>
-                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Course / Grade Level *</label>
-                            <input type="text" id="course" required placeholder="BS Information Technology" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="course" required placeholder="BS Information Technology" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Document *</label>
-                            <select id="docType" onchange="updatePrice()" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                                <option value="">-- Choose Document --</option>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Document Requested *</label>
+                            <select id="docType" onchange="updatePrice()" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                                <option value="">-- Select Document --</option>
                                 <option value="tor">Transcript of Records (TOR) - ₱300</option>
                                 <option value="cert_grad">Certificate of Graduation - ₱150</option>
                                 <option value="cert_enroll">Certificate of Enrollment - ₱100</option>
-                                <option value="good_moral">Good Moral Certificate - ₱150</option>
+                                <option value="good_moral">Certificate of Good Moral - ₱150</option>
                                 <option value="diploma_dup">Diploma (Duplicate Copy) - ₱500</option>
                                 <option value="form137">Form 137 / SF10 - ₱200</option>
                             </select>
@@ -88,15 +98,18 @@
 
                     <div>
                         <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Purpose of Request *</label>
-                        <textarea id="purpose" rows="2" required placeholder="Employment, Transfer, Scholarship, etc." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        <textarea id="purpose" rows="2" required placeholder="Employment, Transfer, Board Exam, etc." class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
                     </div>
 
                     <div class="flex justify-between items-center pt-4 border-t border-slate-100">
                         <div>
-                            <span class="text-xs text-slate-500 block">Total Amount Due</span>
-                            <span id="priceDisplay" class="text-2xl font-bold text-slate-800">₱ 0.00</span>
+                            <span class="text-xs text-slate-500 block">Total Payable Amount</span>
+                            <span id="priceDisplay" class="text-2xl font-bold text-slate-900">₱0.00</span>
                         </div>
-                        <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">Proceed to Payment</button>
+                        <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow-md transition text-sm flex items-center gap-2">
+                            <span>Proceed to Payment</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -105,24 +118,27 @@
         <!-- TAB 2: TRACKER -->
         <div id="tab-tracker" class="hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h2 class="text-xl font-bold text-slate-800 mb-1">Track Your Request</h2>
-                <p class="text-sm text-slate-500 mb-6">Enter your Reference Code to check real-time status.</p>
+                <h2 class="text-lg font-bold text-slate-800 mb-1">Track Request Status</h2>
+                <p class="text-xs text-slate-500 mb-6">Enter your 11-digit Reference Code (e.g., DOC-2026-XXXX) to check current progress.</p>
 
                 <div class="flex gap-2 mb-6">
-                    <input type="text" id="trackRefInput" placeholder="e.g. DOC-2026-8942" class="flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                    <button onclick="trackRequest()" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">Track</button>
+                    <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500 uppercase">
+                    <button onclick="trackRequest()" class="px-6 py-2 bg-brand-600 text-white text-sm font-semibold rounded-lg hover:bg-brand-700 transition">Track</button>
                 </div>
 
-                <div id="trackerResult" class="hidden border rounded-xl p-4 bg-slate-50 space-y-3">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="font-bold text-slate-700" id="trRef">---</span>
-                        <span id="trBadge" class="px-3 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">PENDING</span>
+                <div id="trackerResult" class="hidden border rounded-xl p-5 bg-slate-50 space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Reference Number</span>
+                            <span class="font-bold text-slate-800 text-base" id="trRef">---</span>
+                        </div>
+                        <span id="trBadge" class="px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800">PENDING</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-sm text-slate-600">
-                        <p><strong>Name:</strong> <span id="trName">---</span></p>
-                        <p><strong>Document:</strong> <span id="trDoc">---</span></p>
-                        <p><strong>Date Requested:</strong> <span id="trDate">---</span></p>
-                        <p><strong>GCash Ref:</strong> <span id="trGcash">---</span></p>
+                    <div class="grid grid-cols-2 gap-4 text-xs text-slate-600">
+                        <div><strong class="text-slate-800">Student Name:</strong> <p id="trName" class="text-slate-600">---</p></div>
+                        <div><strong class="text-slate-800">Document Requested:</strong> <p id="trDoc" class="text-slate-600">---</p></div>
+                        <div><strong class="text-slate-800">Date Applied:</strong> <p id="trDate" class="text-slate-600">---</p></div>
+                        <div><strong class="text-slate-800">GCash Ref No.:</strong> <p id="trGcash" class="text-slate-600">---</p></div>
                     </div>
                 </div>
             </div>
@@ -132,24 +148,28 @@
         <div id="tab-admin" class="hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-slate-800">Admin Request Dashboard</h2>
-                    <button onclick="switchTab('request')" class="text-xs text-red-600 hover:underline">Logout</button>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Registrar Request Management</h2>
+                        <p class="text-xs text-slate-500">Manage incoming student document requests and updates.</p>
+                    </div>
+                    <button onclick="switchTab('request')" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-md font-semibold transition">Logout</button>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
+                    <table class="w-full text-left border-collapse text-xs">
                         <thead>
-                            <tr class="bg-slate-100 border-b text-slate-600">
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 uppercase">
                                 <th class="p-3">Ref Code</th>
-                                <th class="p-3">Student</th>
+                                <th class="p-3">Student Name</th>
                                 <th class="p-3">Document</th>
                                 <th class="p-3">GCash Ref</th>
+                                <th class="p-3">Receipt</th>
                                 <th class="p-3">Status</th>
                                 <th class="p-3">Action</th>
                             </tr>
                         </thead>
                         <tbody id="adminTableBody">
-                            <tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>
+                            <tr><td colspan="7" class="p-4 text-center text-slate-400">No requests found.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -158,62 +178,74 @@
 
     </main>
 
-    <!-- PAYMENT MODAL WITH SCROLL -->
+    <!-- PAYMENT MODAL (WITH FIXED SCROLL & MAX-HEIGHT) -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 relative space-y-4 max-h-[90vh] overflow-y-auto">
-            <button onclick="toggleModal('paymentModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-lg font-bold text-slate-800">GCash Payment Upload</h3>
+            <button onclick="toggleModal('paymentModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            
+            <h3 class="text-base font-bold text-slate-800">GCash Payment Upload</h3>
             <p class="text-xs text-slate-500">Scan QR Code or send total amount to official school GCash account.</p>
 
-            <div class="bg-blue-50 p-4 rounded-xl text-center space-y-2 border border-blue-100">
-                <div class="w-32 h-32 bg-white mx-auto border flex items-center justify-center rounded-lg shadow-inner">
-                    <i class="fa-solid fa-qrcode text-6xl text-slate-800"></i>
+            <div class="bg-brand-50 p-4 rounded-xl text-center space-y-2 border border-brand-100">
+                <div class="w-36 h-36 bg-white mx-auto border flex items-center justify-center rounded-lg shadow-sm">
+                    <i class="fa-solid fa-qrcode text-7xl text-slate-800"></i>
                 </div>
-                <p class="text-xs font-semibold text-slate-700">Account Name: Edulink Solutions Inc.</p>
-                <p class="text-xs text-slate-500">Account No.: 0917-890-1234</p>
+                <p class="text-xs font-bold text-slate-800">Account Name: Edulink Solutions Inc.</p>
+                <p class="text-xs text-slate-600">Account No.: 0917-890-1234</p>
             </div>
 
             <div>
                 <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">GCash Reference Number (13 Digits) *</label>
-                <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot *</label>
-                <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot (Simulation) *</label>
+                <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
             </div>
 
-            <button onclick="confirmSubmission()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition">Confirm & Complete Request</button>
+            <button onclick="confirmSubmission()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition">Confirm & Complete Request</button>
+        </div>
+    </div>
+
+    <!-- VIEW RECEIPT MODAL -->
+    <div id="viewReceiptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl relative space-y-3 text-center max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleModal('viewReceiptModal')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            <h4 class="font-bold text-slate-800 text-sm">Uploaded Payment Receipt</h4>
+            <div class="p-2 border rounded-lg bg-slate-50">
+                <img id="receiptModalImage" src="" alt="GCash Receipt" class="w-full rounded">
+            </div>
         </div>
     </div>
 
     <!-- ADMIN LOGIN MODAL -->
     <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-xs w-full p-6 relative space-y-4">
-            <button onclick="toggleModal('adminModal')" class="absolute top-4 right-4 text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-lg font-bold text-slate-800">Admin Login</h3>
-            <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full px-3 py-2 border rounded-lg outline-none">
-            <button onclick="loginAdmin()" class="w-full py-2 bg-slate-900 text-white font-semibold rounded-lg">Login</button>
+            <button onclick="toggleModal('adminModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-slate-800">Admin Login</h3>
+            <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full px-3 py-2 border rounded-lg text-sm outline-none">
+            <button onclick="loginAdmin()" class="w-full py-2 bg-slate-900 text-white text-xs font-bold uppercase rounded-lg shadow hover:bg-slate-800 transition">Login</button>
         </div>
     </div>
 
     <script>
-        const PRICING = { 'tor': 300, 'cert_grad': 150, 'cert_enroll': 100, 'good_moral': 150, 'diploma_dup': 500, 'form137': 200 };
-        const DOC_NAMES = {
-            'tor': 'Transcript of Records (TOR)',
-            'cert_grad': 'Certificate of Graduation',
-            'cert_enroll': 'Certificate of Enrollment',
-            'good_moral': 'Good Moral Certificate',
-            'diploma_dup': 'Diploma (Duplicate Copy)',
-            'form137': 'Form 137 / SF10'
-        };
+        const DOCUMENT_TYPES = [
+            { id: 'tor', name: 'Transcript of Records (TOR)', price: 300 },
+            { id: 'cert_grad', name: 'Certificate of Graduation', price: 150 },
+            { id: 'cert_enroll', name: 'Certificate of Enrollment', price: 100 },
+            { id: 'good_moral', name: 'Certificate of Good Moral', price: 150 },
+            { id: 'diploma_dup', name: 'Diploma (Duplicate Copy)', price: 500 },
+            { id: 'form137', name: 'Form 137 / SF10', price: 200 }
+        ];
 
         let tempFormData = {};
 
         function updatePrice() {
             const val = document.getElementById('docType').value;
-            const price = PRICING[val] || 0;
-            document.getElementById('priceDisplay').innerText = `₱ ${price.toFixed(2)}`;
+            const doc = DOCUMENT_TYPES.find(d => d.id === val);
+            const price = doc ? doc.price : 0;
+            document.getElementById('priceDisplay').innerText = `₱${price.toFixed(2)}`;
         }
 
         function toggleModal(id) {
@@ -221,8 +253,14 @@
         }
 
         function switchTab(tab) {
-            ['tab-request', 'tab-tracker', 'tab-admin'].forEach(t => document.getElementById(t).classList.add('hidden'));
+            ['request', 'tracker', 'admin'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) btn.className = "px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition";
+            });
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if (activeBtn) activeBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-600 text-white transition";
         }
 
         function handleFormSubmit(e) {
@@ -258,14 +296,14 @@
             alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
             document.getElementById('docRequestForm').reset();
             updatePrice();
-            
+
             document.getElementById('trackRefInput').value = refCode;
             switchTab('tracker');
             trackRequest();
         }
 
         function trackRequest() {
-            const ref = document.getElementById('trackRefInput').value.trim();
+            const ref = document.getElementById('trackRefInput').value.trim().toUpperCase();
             const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
             const found = requests.find(r => r.refCode === ref);
 
@@ -274,10 +312,16 @@
                 resDiv.classList.remove('hidden');
                 document.getElementById('trRef').innerText = found.refCode;
                 document.getElementById('trName').innerText = found.fullName;
-                document.getElementById('trDoc').innerText = DOC_NAMES[found.docType] || found.docType;
+                const docObj = DOCUMENT_TYPES.find(d => d.id === found.docType);
+                document.getElementById('trDoc').innerText = docObj ? docObj.name : found.docType;
                 document.getElementById('trDate').innerText = found.date;
                 document.getElementById('trGcash').innerText = found.gcashRef;
-                document.getElementById('trBadge').innerText = found.status;
+                
+                const badge = document.getElementById('trBadge');
+                badge.innerText = found.status;
+                if(found.status === 'READY') badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800";
+                else if(found.status === 'PROCESSING') badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800";
+                else badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800";
             } else {
                 alert('Reference Code not found.');
                 resDiv.classList.add('hidden');
@@ -298,18 +342,25 @@
             const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
             const tbody = document.getElementById('adminTableBody');
             if (requests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">No requests found.</td></tr>';
                 return;
             }
-            tbody.innerHTML = requests.map((r, i) => `
+            tbody.innerHTML = requests.map((r, i) => {
+                const docObj = DOCUMENT_TYPES.find(d => d.id === r.docType);
+                return `
                 <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-bold">${r.refCode}</td>
+                    <td class="p-3 font-bold text-slate-800">${r.refCode}</td>
                     <td class="p-3">${r.fullName}</td>
-                    <td class="p-3">${DOC_NAMES[r.docType] || r.docType}</td>
-                    <td class="p-3">${r.gcashRef}</td>
-                    <td class="p-3"><span class="px-2 py-1 text-xs font-bold rounded bg-blue-100 text-blue-800">${r.status}</span></td>
+                    <td class="p-3">${docObj ? docObj.name : r.docType}</td>
+                    <td class="p-3 font-mono">${r.gcashRef}</td>
                     <td class="p-3">
-                        <select onchange="updateStatus(${i}, this.value)" class="text-xs border p-1 rounded">
+                        <button onclick="showReceipt()" class="text-xs text-brand-600 hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-image"></i> View
+                        </button>
+                    </td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-700">${r.status}</span></td>
+                    <td class="p-3">
+                        <select onchange="updateStatus(${i}, this.value)" class="text-xs border p-1 rounded bg-white outline-none">
                             <option value="PENDING" ${r.status==='PENDING'?'selected':''}>Pending</option>
                             <option value="PROCESSING" ${r.status==='PROCESSING'?'selected':''}>Processing</option>
                             <option value="READY" ${r.status==='READY'?'selected':''}>Ready for Pickup</option>
@@ -317,7 +368,12 @@
                         </select>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
+        }
+
+        function showReceipt() {
+            document.getElementById('receiptModalImage').src = "https://via.placeholder.com/300x500?text=GCash+Receipt+Sample";
+            toggleModal('viewReceiptModal');
         }
 
         function updateStatus(index, newStatus) {
