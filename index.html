@@ -5,813 +5,326 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edulink Solutions - School Document Request Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            700: '#035485',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        gcash: '#005CE6'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between">
 
-    <header class="bg-brand-900 text-white shadow-lg sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-white p-2 rounded-lg text-brand-900 shadow">
-                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-lg leading-tight">Edulink Solutions</h1>
-                        <p class="text-xs text-brand-100">Document Request Portal • PH Private Schools</p>
-                    </div>
+    <!-- HEADER -->
+    <header class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
                 </div>
-
-                <div class="flex items-center space-x-3">
-                    <button id="btnSupabaseConfig" onclick="toggleModal('supabaseModal')" class="flex items-center space-x-2 text-xs bg-brand-800 hover:bg-brand-700 px-3 py-2 rounded-md transition shadow-sm border border-brand-700">
-                        <i class="fa-solid fa-database text-emerald-400"></i>
-                        <span id="supabaseStatusText" class="hidden sm:inline">Supabase: Disconnected (Local Storage Active)</span>
-                    </button>
-                    <div class="h-6 w-px bg-brand-800"></div>
-                    <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> SY 2026-2027
-                    </span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Edulink Solutions</h1>
+                    <p class="text-xs text-slate-400">School Document Request Portal</p>
                 </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="switchTab('request')" id="nav-request" class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white transition">Request Document</button>
+                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-4 py-2 text-sm font-semibold rounded-lg text-slate-300 hover:text-white transition">Status Tracker</button>
+                <button onclick="toggleModal('adminModal')" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-lock mr-1"></i> Admin
+                </button>
             </div>
         </div>
     </header>
 
-    <nav class="bg-white border-b border-slate-200 sticky top-16 z-20 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex space-x-8">
-                <button id="tab-request" onclick="switchTab('request')" class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-brand-600 border-brand-600 flex items-center gap-2">
-                    <i class="fa-solid fa-file-signature"></i> Student Request Form
-                </button>
-                <button id="tab-tracker" onclick="switchTab('tracker')" class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-slate-500 border-transparent hover:text-slate-700 flex items-center gap-2">
-                    <i class="fa-solid fa-magnifying-glass-location"></i> Status Tracker
-                </button>
-                <button id="tab-admin" onclick="switchTab('admin')" class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-slate-500 border-transparent hover:text-slate-700 flex items-center gap-2">
-                    <i class="fa-solid fa-user-shield"></i> Registrar Portal
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-1">
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- TAB 1: REQUEST FORM -->
+        <div id="tab-request" class="space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-xl font-bold text-slate-800 mb-1">Student Document Request Form</h2>
+                <p class="text-sm text-slate-500 mb-6">Please fill in your details accurately to request official school documents.</p>
 
-        <!-- Notification Banner Container -->
-        <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full"></div>
+                <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Student ID Number *</label>
+                            <input type="text" id="studentId" required placeholder="2023-01234" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Full Name *</label>
+                            <input type="text" id="fullName" required placeholder="Juan Dela Cruz" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 1: STUDENT REQUEST FORM                -->
-        <!-- ========================================== -->
-        <section id="view-request" class="tab-content space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
-                <div class="border-b border-slate-200 pb-4 mb-6">
-                    <h2 class="text-2xl font-bold text-slate-900">Request Official School Documents</h2>
-                    <p class="text-slate-500 text-sm mt-1">Fill in the required information. Payment instructions via GCash will be generated automatically.</p>
-                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email Address *</label>
+                            <input type="email" id="email" required placeholder="juan@example.com" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Mobile Number *</label>
+                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
 
-                <form id="requestForm" onsubmit="handleRequestSubmit(event)" class="space-y-6">
-                    <!-- Student Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Course / Grade Level *</label>
+                            <input type="text" id="course" required placeholder="BS Information Technology" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Select Document *</label>
+                            <select id="docType" onchange="updatePrice()" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="">-- Choose Document --</option>
+                                <option value="tor">Transcript of Records (TOR) - ₱300</option>
+                                <option value="cert_grad">Certificate of Graduation - ₱150</option>
+                                <option value="cert_enroll">Certificate of Enrollment - ₱100</option>
+                                <option value="good_moral">Good Moral Certificate - ₱150</option>
+                                <option value="diploma_dup">Diploma (Duplicate Copy) - ₱500</option>
+                                <option value="form137">Form 137 / SF10 - ₱200</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div>
-                        <h3 class="text-sm font-semibold text-brand-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-id-card"></i> Student Information
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Student Number / LRN *</label>
-                                <input type="text" id="studentId" required placeholder="e.g. 2023-10492" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
-                                <input type="text" id="fullName" required placeholder="Juan Dela Cruz" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Contact Mobile Number (for SMS) *</label>
-                                <input type="tel" id="contactNumber" required placeholder="09171234567" pattern="^(09|\+639)\d{9}$" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
-                                <input type="email" id="email" required placeholder="juan@example.com" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Academic Program / Grade Level *</label>
-                                <select id="academicLevel" required class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition bg-white">
-                                    <option value="">Select Option</option>
-                                    <option value="Senior High School (STEM)">Senior High School (STEM)</option>
-                                    <option value="Senior High School (ABM)">Senior High School (ABM)</option>
-                                    <option value="Senior High School (HUMSS)">Senior High School (HUMSS)</option>
-                                    <option value="BS Computer Science">BS Computer Science</option>
-                                    <option value="BS Business Administration">BS Business Administration</option>
-                                    <option value="BS Nursing">BS Nursing</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Year Last Attended / Graduated *</label>
-                                <input type="text" id="yearGraduated" required placeholder="e.g. 2025" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                            </div>
-                        </div>
+                        <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Purpose of Request *</label>
+                        <textarea id="purpose" rows="2" required placeholder="Employment, Transfer, Scholarship, etc." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
                     </div>
 
-                    <!-- Document Selection -->
-                    <div class="pt-4 border-t border-slate-100">
-                        <h3 class="text-sm font-semibold text-brand-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-file-lines"></i> Select Documents Requested
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="documentOptions">
-                            <!-- Options injected dynamically by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Delivery & Purpose -->
-                    <div class="pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Purpose of Request *</label>
-                            <select id="purpose" required class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition bg-white">
-                                <option value="">Select Purpose</option>
-                                <option value="Employment">Employment</option>
-                                <option value="Further Studies / Transfer">Further Studies / Transfer</option>
-                                <option value="Board Exam / PRC">Board Exam / PRC</option>
-                                <option value="Visa / Travel">Visa / Travel Requirements</option>
-                                <option value="Personal Copy">Personal Copy</option>
-                            </select>
+                            <span class="text-xs text-slate-500 block">Total Amount Due</span>
+                            <span id="priceDisplay" class="text-2xl font-bold text-slate-800">₱ 0.00</span>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Fulfillment Option *</label>
-                            <select id="deliveryOption" required class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition bg-white">
-                                <option value="On-Campus Pickup">On-Campus Pickup (Free)</option>
-                                <option value="Courier Delivery (Lalamove/Grab)">Courier Pick-up / Express Delivery (+ ₱150)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Order Summary Box -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <div>
-                            <span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Total Payable Amount:</span>
-                            <div class="text-3xl font-extrabold text-brand-900" id="totalAmount">₱ 0.00</div>
-                        </div>
-                        <button type="submit" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3 rounded-lg shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> Proceed to Payment & Submit
-                        </button>
+                        <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">Proceed to Payment</button>
                     </div>
                 </form>
             </div>
-        </section>
+        </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 2: DOCUMENT STATUS TRACKER             -->
-        <!-- ========================================== -->
-        <section id="view-tracker" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8 max-w-3xl mx-auto">
-                <div class="text-center max-w-xl mx-auto mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Track Document Request</h2>
-                    <p class="text-slate-500 text-sm mt-1">Enter your Reference Code or Student Number to check real-time progress and SMS history.</p>
-                    
-                    <div class="mt-6 flex gap-2">
-                        <input type="text" id="trackSearchInput" placeholder="Enter Ref Code (e.g. REF-109283) or Student ID" class="flex-1 text-sm p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none uppercase tracking-wider font-mono">
-                        <button onclick="performSearch()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition flex items-center gap-2">
-                            <i class="fa-solid fa-magnifying-glass"></i> Search
-                        </button>
-                    </div>
+        <!-- TAB 2: TRACKER -->
+        <div id="tab-tracker" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-xl font-bold text-slate-800 mb-1">Track Your Request</h2>
+                <p class="text-sm text-slate-500 mb-6">Enter your Reference Code to check real-time status.</p>
+
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="trackRefInput" placeholder="e.g. DOC-2026-8942" class="flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="trackRequest()" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">Track</button>
                 </div>
 
-                <!-- Tracker Results Container -->
-                <div id="trackerResultContainer" class="hidden space-y-6">
-                    <!-- Status Progress Bar -->
-                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <span class="text-xs text-slate-400 font-mono" id="trackRefCode">REF-000000</span>
-                                <h3 class="text-lg font-bold text-slate-800" id="trackStudentName">--</h3>
-                                <p class="text-xs text-slate-500" id="trackDocsList">--</p>
-                            </div>
-                            <span id="trackStatusBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">Pending Payment</span>
-                        </div>
-
-                        <!-- Progress Steps -->
-                        <div class="relative mt-8 mb-4">
-                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-slate-200">
-                                <div id="progressBar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-500 transition-all duration-500" style="width: 25%"></div>
-                            </div>
-                            <div class="flex justify-between text-xs font-medium text-slate-500 text-center">
-                                <div class="w-1/4">Submitted</div>
-                                <div class="w-1/4">Payment Verified</div>
-                                <div class="w-1/4">Processing</div>
-                                <div class="w-1/4">Ready for Pickup</div>
-                            </div>
-                        </div>
+                <div id="trackerResult" class="hidden border rounded-xl p-4 bg-slate-50 space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-bold text-slate-700" id="trRef">---</span>
+                        <span id="trBadge" class="px-3 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">PENDING</span>
                     </div>
-
-                    <!-- Details Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
-                            <div class="text-xs text-slate-400">Total Amount</div>
-                            <div class="font-bold text-slate-700" id="trackAmount">₱0.00</div>
-                        </div>
-                        <div class="p-4 rounded-lg border border-slate-100 bg-white">
-                            <div class="text-xs text-slate-400">GCash Ref No.</div>
-                            <div class="font-bold text-slate-700 font-mono" id="trackGcashRef">--</div>
-                        </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm text-slate-600">
+                        <p><strong>Name:</strong> <span id="trName">---</span></p>
+                        <p><strong>Document:</strong> <span id="trDoc">---</span></p>
+                        <p><strong>Date Requested:</strong> <span id="trDate">---</span></p>
+                        <p><strong>GCash Ref:</strong> <span id="trGcash">---</span></p>
                     </div>
-
-                    <!-- SMS Logs Section -->
-                    <div class="border-t border-slate-100 pt-4">
-                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-comment-sms"></i> Automated SMS Notification History
-                        </h4>
-                        <div id="smsHistoryList" class="space-y-2">
-                            <!-- SMS logs injected here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div id="trackerEmptyState" class="text-center py-12 text-slate-400 border-2 border-dashed border-slate-200 rounded-xl">
-                    <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
-                    <p class="text-sm">No request loaded. Enter details above to view tracking details.</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 3: ADMIN / REGISTRAR PORTAL            -->
-        <!-- ========================================== -->
-        <section id="view-admin" class="tab-content hidden space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">Registrar Control Center</h2>
-                    <p class="text-slate-500 text-xs mt-0.5">Manage document requests, verify GCash receipts, update statuses & trigger SMS updates.</p>
+        <!-- TAB 3: ADMIN DASHBOARD -->
+        <div id="tab-admin" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">Admin Request Dashboard</h2>
+                    <button onclick="switchTab('request')" class="text-xs text-red-600 hover:underline">Logout</button>
                 </div>
-                <div class="flex items-center gap-3">
-                    <select id="adminFilterStatus" onchange="renderAdminTable()" class="text-xs p-2 rounded-lg border border-slate-300 bg-white font-medium">
-                        <option value="ALL font-medium">All Statuses</option>
-                        <option value="Pending Payment Verification">Pending Payment</option>
-                        <option value="Processing Documents">Processing Documents</option>
-                        <option value="Ready for Release / Pickup">Ready for Pickup</option>
-                        <option value="Completed / Released">Completed</option>
-                    </select>
-                    <button onclick="exportRequestsCSV()" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-lg transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-csv"></i> Export CSV
-                    </button>
-                </div>
-            </div>
 
-            <!-- Table Container -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-semibold">
-                                <th class="p-3">Ref Code / Date</th>
-                                <th class="p-3">Student Name</th>
-                                <th class="p-3">Documents Requested</th>
-                                <th class="p-3">Amount / GCash Ref</th>
-                                <th class="p-3">Receipt</th>
+                            <tr class="bg-slate-100 border-b text-slate-600">
+                                <th class="p-3">Ref Code</th>
+                                <th class="p-3">Student</th>
+                                <th class="p-3">Document</th>
+                                <th class="p-3">GCash Ref</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3 text-right">Actions</th>
+                                <th class="p-3">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTableBody" class="divide-y divide-slate-100">
-                            <!-- Table rows injected via JavaScript -->
+                        <tbody id="adminTableBody">
+                            <tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
     </main>
 
-    <!-- GCASH PAYMENT MODAL -->
-    <div id="gcashModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-5 animate-fade-in">
-            <button onclick="toggleModal('gcashModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- PAYMENT MODAL WITH SCROLL -->
+    <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative space-y-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleModal('paymentModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-slate-800">GCash Payment Upload</h3>
+            <p class="text-xs text-slate-500">Scan QR Code or send total amount to official school GCash account.</p>
 
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center bg-blue-50 text-gcash p-3 rounded-full mb-2">
-                    <i class="fa-solid fa-wallet text-2xl"></i>
+            <div class="bg-blue-50 p-4 rounded-xl text-center space-y-2 border border-blue-100">
+                <div class="w-32 h-32 bg-white mx-auto border flex items-center justify-center rounded-lg shadow-inner">
+                    <i class="fa-solid fa-qrcode text-6xl text-slate-800"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-900">GCash Payment Upload</h3>
-                <p class="text-xs text-slate-500">Scan QR Code or send total amount to official school GCash account.</p>
+                <p class="text-xs font-semibold text-slate-700">Account Name: Edulink Solutions Inc.</p>
+                <p class="text-xs text-slate-500">Account No.: 0917-890-1234</p>
             </div>
 
-            <!-- Mock GCash QR -->
-            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center space-y-2">
-                <div class="bg-white p-3 inline-block rounded-lg shadow-sm border border-blue-200">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=09171234567-EDULINK-SCHOOL" alt="GCash QR Code" class="w-32 h-32">
-                </div>
-                <div class="text-xs text-slate-600 font-medium">Account Name: <span class="font-bold">Edulink Solutions Inc.</span></div>
-                <div class="text-xs text-slate-600 font-medium">Account No.: <span class="font-bold">0917-890-1234</span></div>
+            <div>
+                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">GCash Reference Number (13 Digits) *</label>
+                <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
-            <!-- Receipt Form -->
-            <form id="gcashForm" onsubmit="handleGcashSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">GCash Reference Number (13 Digits) *</label>
-                    <input type="text" id="gcashRefNo" required placeholder="e.g. 1029384756102" pattern="\d{10,13}" class="w-full text-sm p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gcash outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Upload Receipt Screenshot (Simulation) *</label>
-                    <input type="file" id="gcashReceiptFile" accept="image/*" required onchange="previewReceiptImage(event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-gcash hover:file:bg-blue-100 cursor-pointer">
-                    <div id="receiptPreviewContainer" class="mt-2 hidden">
-                        <img id="receiptPreviewImg" src="" alt="Receipt Preview" class="h-24 w-full object-cover rounded-lg border">
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-gcash hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow transition">
-                    Confirm & Submit Application
-                </button>
-            </form>
+            <div>
+                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot *</label>
+                <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+
+            <button onclick="confirmSubmission()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition">Confirm & Complete Request</button>
         </div>
     </div>
 
-    <!-- SUPABASE CONFIGURATION MODAL -->
-    <div id="supabaseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
-            <button onclick="toggleModal('supabaseModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-
-            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-                <i class="fa-solid fa-database text-emerald-500 text-2xl"></i>
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900">Supabase Cloud Integration</h3>
-                    <p class="text-xs text-slate-500">Connect your Supabase project for real-time cloud storage.</p>
-                </div>
-            </div>
-
-            <p class="text-xs text-slate-600 leading-relaxed bg-amber-50 border border-amber-200 p-3 rounded-lg">
-                <strong>Note:</strong> By default, this app operates in <strong>Local Storage Mode</strong>. Connect Supabase credentials below to sync request records cloud-wide.
-            </p>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Supabase Project URL</label>
-                    <input type="text" id="supabaseUrl" placeholder="https://xyzcompany.supabase.co" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 font-mono">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Supabase Anon Key</label>
-                    <input type="password" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="w-full text-xs p-2.5 rounded-lg border border-slate-300 font-mono">
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="clearSupabaseConfig()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-lg transition">Disconnect</button>
-                <button onclick="saveSupabaseConfig()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2 rounded-lg transition">Save & Connect</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW RECEIPT MODAL -->
-    <div id="viewReceiptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl relative space-y-3 text-center">
-            <button onclick="toggleModal('viewReceiptModal')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h4 class="font-bold text-slate-800 text-sm">Uploaded Payment Receipt</h4>
-            <div class="p-2 border rounded-lg bg-slate-50 max-h-96 overflow-auto">
-                <img id="receiptModalImage" src="" alt="GCash Receipt" class="w-full rounded">
-            </div>
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xs w-full p-6 relative space-y-4">
+            <button onclick="toggleModal('adminModal')" class="absolute top-4 right-4 text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-slate-800">Admin Login</h3>
+            <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full px-3 py-2 border rounded-lg outline-none">
+            <button onclick="loginAdmin()" class="w-full py-2 bg-slate-900 text-white font-semibold rounded-lg">Login</button>
         </div>
     </div>
 
     <script>
-        // AVAILABLE DOCUMENTS & PRICING (PHP)
-        const DOCUMENT_TYPES = [
-            { id: 'tor', name: 'Transcript of Records (TOR)', price: 300, icon: 'fa-file-invoice' },
-            { id: 'cert_grad', name: 'Certificate of Graduation', price: 150, icon: 'fa-certificate' },
-            { id: 'cert_enroll', name: 'Certificate of Enrollment / Registration', price: 100, icon: 'fa-file-lines' },
-            { id: 'good_moral', name: 'Certificate of Good Moral Character', price: 150, icon: 'fa-award' },
-            { id: 'diploma_dup', name: 'Diploma (Duplicate Copy)', price: 500, icon: 'fa-graduation-cap' },
-            { id: 'form137', name: 'Form 137 / SF10 (School-to-School Transfer)', price: 200, icon: 'fa-folder-open' }
-        ];
-
-        // GLOBAL APPLICATION STATE
-        let pendingFormSubmission = null;
-        let supabaseClient = null;
-        let documentRequests = [];
-
-        // INITIALIZATION
-        window.onload = function() {
-            renderDocumentOptions();
-            initSupabaseFromStorage();
-            loadRequestsData();
-            renderAdminTable();
+        const PRICING = { 'tor': 300, 'cert_grad': 150, 'cert_enroll': 100, 'good_moral': 150, 'diploma_dup': 500, 'form137': 200 };
+        const DOC_NAMES = {
+            'tor': 'Transcript of Records (TOR)',
+            'cert_grad': 'Certificate of Graduation',
+            'cert_enroll': 'Certificate of Enrollment',
+            'good_moral': 'Good Moral Certificate',
+            'diploma_dup': 'Diploma (Duplicate Copy)',
+            'form137': 'Form 137 / SF10'
         };
 
-        // RENDER DOCUMENT SELECTION CHECKBOXES
-        function renderDocumentOptions() {
-            const container = document.getElementById('documentOptions');
-            container.innerHTML = DOCUMENT_TYPES.map(doc => `
-                <label class="flex items-center p-3 rounded-lg border border-slate-200 hover:border-brand-500 cursor-pointer transition bg-slate-50/50 hover:bg-brand-50/30">
-                    <input type="checkbox" name="docSelect" value="${doc.id}" data-price="${doc.price}" onchange="calculateTotal()" class="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
-                    <div class="ml-3 flex-1 flex justify-between items-center text-xs">
-                        <span class="font-medium text-slate-800"><i class="fa-solid ${doc.icon} mr-1.5 text-brand-600"></i> ${doc.name}</span>
-                        <span class="font-bold text-slate-600">₱${doc.price.toFixed(2)}</span>
-                    </div>
-                </label>
-            `).join('');
+        let tempFormData = {};
+
+        function updatePrice() {
+            const val = document.getElementById('docType').value;
+            const price = PRICING[val] || 0;
+            document.getElementById('priceDisplay').innerText = `₱ ${price.toFixed(2)}`;
         }
 
-        // CALCULATE FORM TOTAL
-        function calculateTotal() {
-            const checkboxes = document.querySelectorAll('input[name="docSelect"]:checked');
-            let docTotal = Array.from(checkboxes).reduce((sum, cb) => sum + parseFloat(cb.dataset.price), 0);
-            const deliveryOption = document.getElementById('deliveryOption').value;
-            if (deliveryOption.includes('Courier')) {
-                docTotal += 150;
-            }
-            document.getElementById('totalAmount').innerText = `₱ ${docTotal.toFixed(2)}`;
-            return docTotal;
+        function toggleModal(id) {
+            document.getElementById(id).classList.toggle('hidden');
         }
 
-        document.getElementById('deliveryOption').addEventListener('change', calculateTotal);
+        function switchTab(tab) {
+            ['tab-request', 'tab-tracker', 'tab-admin'].forEach(t => document.getElementById(t).classList.add('hidden'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+        }
 
-        // HANDLE SUBMISSION OF REQUEST FORM
-        function handleRequestSubmit(e) {
+        function handleFormSubmit(e) {
             e.preventDefault();
-            const selectedDocs = Array.from(document.querySelectorAll('input[name="docSelect"]:checked')).map(cb => {
-                const doc = DOCUMENT_TYPES.find(d => d.id === cb.value);
-                return doc.name;
-            });
-
-            if (selectedDocs.length === 0) {
-                showToast('Please select at least one document to request.', 'error');
-                return;
-            }
-
-            const refCode = 'REF-' + Math.floor(100000 + Math.random() * 900000);
-            pendingFormSubmission = {
-                id: refCode,
-                refCode: refCode,
+            tempFormData = {
                 studentId: document.getElementById('studentId').value,
                 fullName: document.getElementById('fullName').value,
-                contactNumber: document.getElementById('contactNumber').value,
                 email: document.getElementById('email').value,
-                academicLevel: document.getElementById('academicLevel').value,
-                yearGraduated: document.getElementById('yearGraduated').value,
-                documents: selectedDocs,
+                mobile: document.getElementById('mobile').value,
+                course: document.getElementById('course').value,
+                docType: document.getElementById('docType').value,
                 purpose: document.getElementById('purpose').value,
-                deliveryOption: document.getElementById('deliveryOption').value,
-                amount: calculateTotal(),
-                status: 'Pending Payment Verification',
-                requestDate: new Date().toISOString(),
-                smsLogs: [
-                    { time: new Date().toLocaleString(), text: `System: Request ${refCode} initiated. Waiting for payment submission.` }
-                ]
+                date: new Date().toLocaleDateString()
             };
-
-            toggleModal('gcashModal');
+            toggleModal('paymentModal');
         }
 
-        // PREVIEW RECEIPT screenshot
-        function previewReceiptImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('receiptPreviewImg').src = e.target.result;
-                    document.getElementById('receiptPreviewContainer').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
+        function confirmSubmission() {
+            const gcashRef = document.getElementById('gcashRef').value;
+            if (!gcashRef || gcashRef.length < 10) {
+                alert('Please enter a valid GCash Reference Number.');
+                return;
             }
-        }
 
-        // SUBMIT GCASH PAYMENT
-        function handleGcashSubmit(e) {
-            e.preventDefault();
-            if (!pendingFormSubmission) return;
+            const refCode = 'DOC-2026-' + Math.floor(1000 + Math.random() * 9000);
+            const requestRecord = { ...tempFormData, refCode, gcashRef, status: 'PENDING' };
 
-            const gcashRef = document.getElementById('gcashRefNo').value;
-            const previewImgSrc = document.getElementById('receiptPreviewImg').src;
+            let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
+            requests.push(requestRecord);
+            localStorage.setItem('doc_requests', JSON.stringify(requests));
 
-            pendingFormSubmission.gcashRefNo = gcashRef;
-            pendingFormSubmission.receiptImg = previewImgSrc || 'https://placehold.co/400x600/e2e8f0/475569?text=GCash+Receipt+Mock';
-
-            // Add SMS log
-            pendingFormSubmission.smsLogs.push({
-                time: new Date().toLocaleString(),
-                text: `SMS Sent to ${pendingFormSubmission.contactNumber}: "Edulink: Payment received for Ref ${pendingFormSubmission.refCode} (GCash: ${gcashRef}). Registrar validation in progress."`
-            });
-
-            // Save to database/local
-            saveNewRequest(pendingFormSubmission);
-
-            toggleModal('gcashModal');
-            showToast('Request & Payment submitted successfully!', 'success');
-
-            // Reset Form & Switch to Tracker
-            document.getElementById('requestForm').reset();
-            document.getElementById('receiptPreviewContainer').classList.add('hidden');
-            calculateTotal();
-
-            // Auto Search in Tracker
-            document.getElementById('trackSearchInput').value = pendingFormSubmission.refCode;
+            toggleModal('paymentModal');
+            alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
+            document.getElementById('docRequestForm').reset();
+            updatePrice();
+            
+            document.getElementById('trackRefInput').value = refCode;
             switchTab('tracker');
-            performSearch();
-
-            pendingFormSubmission = null;
+            trackRequest();
         }
 
-        // SAVE DATA (LOCALSTORAGE / SUPABASE)
-        async function saveNewRequest(requestObj) {
-            documentRequests.unshift(requestObj);
-            saveToLocalStorage();
+        function trackRequest() {
+            const ref = document.getElementById('trackRefInput').value.trim();
+            const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
+            const found = requests.find(r => r.refCode === ref);
 
-            if (supabaseClient) {
-                try {
-                    await supabaseClient.from('document_requests').insert([requestObj]);
-                } catch (err) {
-                    console.error('Supabase error:', err);
-                }
-            }
-            renderAdminTable();
-        }
-
-        // DATA PERSISTENCE HELPERS
-        function saveToLocalStorage() {
-            localStorage.setItem('edulink_requests', JSON.stringify(documentRequests));
-        }
-
-        function loadRequestsData() {
-            const data = localStorage.getItem('edulink_requests');
-            if (data) {
-                documentRequests = JSON.parse(data);
+            const resDiv = document.getElementById('trackerResult');
+            if (found) {
+                resDiv.classList.remove('hidden');
+                document.getElementById('trRef').innerText = found.refCode;
+                document.getElementById('trName').innerText = found.fullName;
+                document.getElementById('trDoc').innerText = DOC_NAMES[found.docType] || found.docType;
+                document.getElementById('trDate').innerText = found.date;
+                document.getElementById('trGcash').innerText = found.gcashRef;
+                document.getElementById('trBadge').innerText = found.status;
             } else {
-                // Mock initial seed data
-                documentRequests = [
-                    {
-                        id: 'REF-849201',
-                        refCode: 'REF-849201',
-                        studentId: '2022-00123',
-                        fullName: 'Maria Santos',
-                        contactNumber: '09171112233',
-                        email: 'maria@example.com',
-                        academicLevel: 'Senior High School (STEM)',
-                        yearGraduated: '2024',
-                        documents: ['Transcript of Records (TOR)', 'Certificate of Good Moral Character'],
-                        purpose: 'Further Studies / Transfer',
-                        deliveryOption: 'On-Campus Pickup',
-                        amount: 450,
-                        gcashRefNo: '1002938475612',
-                        receiptImg: 'https://placehold.co/400x600/005CE6/ffffff?text=GCash+Receipt+Mock',
-                        status: 'Processing Documents',
-                        requestDate: new Date(Date.now() - 86400000).toISOString(),
-                        smsLogs: [
-                            { time: new Date().toLocaleString(), text: 'Edulink: Payment verified. Your documents are now being processed.' }
-                        ]
-                    }
-                ];
-                saveToLocalStorage();
+                alert('Reference Code not found.');
+                resDiv.classList.add('hidden');
             }
         }
 
-        // SEARCH/TRACKER LOGIC
-        function performSearch() {
-            const query = document.getElementById('trackSearchInput').value.trim().toUpperCase();
-            if (!query) {
-                showToast('Please enter a reference code or student ID.', 'error');
-                return;
+        function loginAdmin() {
+            if (document.getElementById('adminPass').value === 'admin123') {
+                toggleModal('adminModal');
+                switchTab('admin');
+                loadAdminData();
+            } else {
+                alert('Incorrect password!');
             }
-
-            const record = documentRequests.find(r => r.refCode.toUpperCase() === query || r.studentId.toUpperCase() === query);
-
-            if (!record) {
-                document.getElementById('trackerResultContainer').classList.add('hidden');
-                document.getElementById('trackerEmptyState').classList.remove('hidden');
-                document.getElementById('trackerEmptyState').innerHTML = `
-                    <i class="fa-solid fa-circle-exclamation text-4xl text-amber-500 mb-2"></i>
-                    <p class="text-sm font-semibold text-slate-700">No Request Found</p>
-                    <p class="text-xs text-slate-400">Please double check the reference code or student number.</p>
-                `;
-                return;
-            }
-
-            document.getElementById('trackerEmptyState').classList.add('hidden');
-            document.getElementById('trackerResultContainer').classList.remove('hidden');
-
-            document.getElementById('trackRefCode').innerText = record.refCode;
-            document.getElementById('trackStudentName').innerText = `${record.fullName} (${record.studentId})`;
-            document.getElementById('trackDocsList').innerText = record.documents.join(', ');
-            document.getElementById('trackAmount').innerText = `₱${record.amount.toFixed(2)}`;
-            document.getElementById('trackGcashRef').innerText = record.gcashRefNo || 'N/A';
-            document.getElementById('trackStatusBadge').innerText = record.status;
-
-            // Calculate Progress Bar Width & Status Styling
-            let progress = 25;
-            if (record.status === 'Pending Payment Verification') progress = 25;
-            if (record.status === 'Processing Documents') progress = 60;
-            if (record.status === 'Ready for Release / Pickup') progress = 85;
-            if (record.status === 'Completed / Released') progress = 100;
-
-            document.getElementById('progressBar').style.width = progress + '%';
-
-            // Render SMS Logs
-            const smsContainer = document.getElementById('smsHistoryList');
-            smsContainer.innerHTML = record.smsLogs.map(log => `
-                <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-xs flex justify-between items-center">
-                    <span class="text-slate-700 font-mono"><i class="fa-solid fa-paper-plane text-brand-500 mr-2"></i>${log.text}</span>
-                    <span class="text-slate-400 text-[10px]">${log.time}</span>
-                </div>
-            `).join('');
         }
 
-        // ADMIN TABLE RENDERING
-        function renderAdminTable() {
+        function loadAdminData() {
+            const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
             const tbody = document.getElementById('adminTableBody');
-            const filter = document.getElementById('adminFilterStatus').value;
-
-            let filtered = documentRequests;
-            if (filter !== 'ALL font-medium') {
-                filtered = documentRequests.filter(r => r.status === filter);
-            }
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No document requests found.</td></tr>`;
+            if (requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>';
                 return;
             }
-
-            tbody.innerHTML = filtered.map(req => `
-                <tr class="hover:bg-slate-50 transition">
+            tbody.innerHTML = requests.map((r, i) => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold">${r.refCode}</td>
+                    <td class="p-3">${r.fullName}</td>
+                    <td class="p-3">${DOC_NAMES[r.docType] || r.docType}</td>
+                    <td class="p-3">${r.gcashRef}</td>
+                    <td class="p-3"><span class="px-2 py-1 text-xs font-bold rounded bg-blue-100 text-blue-800">${r.status}</span></td>
                     <td class="p-3">
-                        <div class="font-bold font-mono text-slate-800">${req.refCode}</div>
-                        <div class="text-[10px] text-slate-400">${new Date(req.requestDate).toLocaleDateString()}</div>
-                    </td>
-                    <td class="p-3">
-                        <div class="font-semibold text-slate-800">${req.fullName}</div>
-                        <div class="text-[10px] text-slate-500">${req.studentId} • ${req.contactNumber}</div>
-                    </td>
-                    <td class="p-3">
-                        <div class="max-w-xs truncate text-slate-700">${req.documents.join(', ')}</div>
-                    </td>
-                    <td class="p-3">
-                        <div class="font-bold text-slate-800">₱${req.amount.toFixed(2)}</div>
-                        <div class="text-[10px] font-mono text-gcash">Ref: ${req.gcashRefNo || 'None'}</div>
-                    </td>
-                    <td class="p-3">
-                        <button onclick="viewReceipt('${req.receiptImg}')" class="text-brand-600 hover:text-brand-800 underline text-[11px]">View Receipt</button>
-                    </td>
-                    <td class="p-3">
-                        <select onchange="updateStatus('${req.refCode}', this.value)" class="text-[11px] p-1.5 rounded border border-slate-300 bg-white font-medium">
-                            <option value="Pending Payment Verification" ${req.status === 'Pending Payment Verification' ? 'selected' : ''}>Pending Payment</option>
-                            <option value="Processing Documents" ${req.status === 'Processing Documents' ? 'selected' : ''}>Processing</option>
-                            <option value="Ready for Release / Pickup" ${req.status === 'Ready for Release / Pickup' ? 'selected' : ''}>Ready for Pickup</option>
-                            <option value="Completed / Released" ${req.status === 'Completed / Released' ? 'selected' : ''}>Completed</option>
+                        <select onchange="updateStatus(${i}, this.value)" class="text-xs border p-1 rounded">
+                            <option value="PENDING" ${r.status==='PENDING'?'selected':''}>Pending</option>
+                            <option value="PROCESSING" ${r.status==='PROCESSING'?'selected':''}>Processing</option>
+                            <option value="READY" ${r.status==='READY'?'selected':''}>Ready for Pickup</option>
+                            <option value="COMPLETED" ${r.status==='COMPLETED'?'selected':''}>Completed</option>
                         </select>
-                    </td>
-                    <td class="p-3 text-right">
-                        <button onclick="triggerSmsReminder('${req.refCode}')" title="Send SMS Update" class="bg-brand-50 hover:bg-brand-100 text-brand-700 px-2.5 py-1.5 rounded transition">
-                            <i class="fa-solid fa-comment-sms"></i>
-                        </button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // UPDATE STATUS & TRIGGER SMS LOGIC
-        function updateStatus(refCode, newStatus) {
-            const req = documentRequests.find(r => r.refCode === refCode);
-            if (req) {
-                req.status = newStatus;
-                
-                // Add simulated SMS Notification
-                const smsText = `Edulink SMS: Hi ${req.fullName}, your document request status for ${req.refCode} has been updated to: "${newStatus}".`;
-                req.smsLogs.push({ time: new Date().toLocaleString(), text: smsText });
-
-                saveToLocalStorage();
-                showToast(`Status updated & SMS dispatched to ${req.contactNumber}!`, 'info');
-            }
-        }
-
-        function triggerSmsReminder(refCode) {
-            const req = documentRequests.find(r => r.refCode === refCode);
-            if (req) {
-                const smsText = `Edulink Reminder SMS sent to ${req.contactNumber}: "Your requested documents (${req.documents.length}) are currently ${req.status}."`;
-                req.smsLogs.push({ time: new Date().toLocaleString(), text: smsText });
-                saveToLocalStorage();
-                showToast(`SMS message dispatched to ${req.contactNumber}!`, 'success');
-            }
-        }
-
-        function viewReceipt(imgUrl) {
-            document.getElementById('receiptModalImage').src = imgUrl;
-            toggleModal('viewReceiptModal');
-        }
-
-        // EXPORT TO CSV
-        function exportRequestsCSV() {
-            if (documentRequests.length === 0) {
-                showToast('No records to export', 'error');
-                return;
-            }
-            let csv = 'RefCode,StudentId,FullName,Contact,Amount,GCashRef,Status,Date\n';
-            documentRequests.forEach(r => {
-                csv += `"${r.refCode}","${r.studentId}","${r.fullName}","${r.contactNumber}",${r.amount},"${r.gcashRefNo}","${r.status}","${r.requestDate}"\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', `Edulink_Document_Requests_${new Date().toISOString().slice(0,10)}.csv`);
-            a.click();
-        }
-
-        // SUPABASE CONFIGURATION HANDLERS
-        function saveSupabaseConfig() {
-            const url = document.getElementById('supabaseUrl').value.trim();
-            const key = document.getElementById('supabaseKey').value.trim();
-
-            if (!url || !key) {
-                showToast('Please provide both Supabase URL and Key', 'error');
-                return;
-            }
-
-            localStorage.setItem('edulink_sb_url', url);
-            localStorage.setItem('edulink_sb_key', key);
-
-            initSupabaseFromStorage();
-            toggleModal('supabaseModal');
-            showToast('Supabase config saved successfully!', 'success');
-        }
-
-        function clearSupabaseConfig() {
-            localStorage.removeItem('edulink_sb_url');
-            localStorage.removeItem('edulink_sb_key');
-            supabaseClient = null;
-            document.getElementById('supabaseStatusText').innerText = 'Supabase: Disconnected (Local Storage Active)';
-            toggleModal('supabaseModal');
-            showToast('Disconnected from Supabase Cloud', 'info');
-        }
-
-        function initSupabaseFromStorage() {
-            const url = localStorage.getItem('edulink_sb_url');
-            const key = localStorage.getItem('edulink_sb_key');
-
-            if (url && key && window.supabase) {
-                try {
-                    supabaseClient = window.supabase.createClient(url, key);
-                    document.getElementById('supabaseStatusText').innerText = 'Supabase: Connected';
-                } catch (e) {
-                    console.error('Failed to init Supabase:', e);
-                }
-            }
-        }
-
-        // TAB NAVIGATION LOGIC
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('text-brand-600', 'border-brand-600');
-                el.classList.add('text-slate-500', 'border-transparent');
-            });
-
-            document.getElementById(`view-${tabName}`).classList.remove('hidden');
-            const activeTab = document.getElementById(`tab-${tabName}`);
-            activeTab.classList.add('text-brand-600', 'border-brand-600');
-            activeTab.classList.remove('text-slate-500', 'border-transparent');
-
-            if (tabName === 'admin') renderAdminTable();
-        }
-
-        // MODAL TOGGLE HELPER
-        function toggleModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.toggle('hidden');
-        }
-
-        // TOAST NOTIFICATIONS
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-slate-800';
-            toast.className = `${bgClass} text-white text-xs px-4 py-3 rounded-lg shadow-xl flex items-center justify-between transition-all transform duration-300`;
-            toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="ml-3 text-white/80 hover:text-white">&times;</button>`;
-            
-            const container = document.getElementById('toastContainer');
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 4000);
+        function updateStatus(index, newStatus) {
+            let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
+            requests[index].status = newStatus;
+            localStorage.setItem('doc_requests', JSON.stringify(requests));
+            loadAdminData();
         }
     </script>
 </body>
