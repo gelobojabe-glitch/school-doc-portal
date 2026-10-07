@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Edulink Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-center items-center p-4">
+
+    <!-- LOGIN PANEL -->
+    <div id="loginSection" class="bg-slate-800 border border-slate-700 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+        <div class="text-center space-y-1">
+            <div class="bg-blue-600 text-white w-12 h-12 rounded-xl flex items-center justify-center mx-auto shadow-md">
+                <i class="fa-solid fa-lock text-xl"></i>
+            </div>
+            <h2 class="text-lg font-bold">Registrar Admin Access</h2>
+            <p class="text-xs text-slate-400">Authorized Personnel Only</p>
+        </div>
+
+        <div>
+            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Admin Password</label>
+            <input type="password" id="adminPass" placeholder="••••••••" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white outline-none focus:border-blue-500">
+        </div>
+
+        <button onclick="loginAdmin()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow-md">Login to Portal</button>
+    </div>
+
+    <!-- DASHBOARD PANEL -->
+    <div id="dashboardSection" class="hidden w-full max-w-5xl bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden space-y-6 p-6">
+        <div class="flex justify-between items-center border-b pb-4">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">Registrar Admin Dashboard</h2>
+                <p class="text-xs text-slate-500">Private Document Management Interface</p>
+            </div>
+            <button onclick="logoutAdmin()" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-md font-semibold transition">Logout</button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="bg-slate-100 border-b text-slate-600 uppercase">
+                        <th class="p-3">Ref Code</th>
+                        <th class="p-3">Student Name</th>
+                        <th class="p-3">Document</th>
+                        <th class="p-3">GCash Ref</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    <tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const DOCUMENT_NAMES = {
+            'tor': 'Transcript of Records (TOR)',
+            'cert_grad': 'Certificate of Graduation',
+            'cert_enroll': 'Certificate of Enrollment',
+            'good_moral': 'Certificate of Good Moral',
+            'diploma_dup': 'Diploma (Duplicate Copy)',
+            'form137': 'Form 137 / SF10'
+        };
+
+        function loginAdmin() {
+            if (document.getElementById('adminPass').value === 'admin123') {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                loadAdminData();
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminPass').value = '';
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function loadAdminData() {
+            const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
+            const tbody = document.getElementById('adminTableBody');
+            if (requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No requests found.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = requests.map((r, i) => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">${r.refCode}</td>
+                    <td class="p-3">${r.fullName}</td>
+                    <td class="p-3">${DOCUMENT_NAMES[r.docType] || r.docType}</td>
+                    <td class="p-3 font-mono">${r.gcashRef}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded bg-blue-100 text-blue-800">${r.status}</span></td>
+                    <td class="p-3">
+                        <select onchange="updateStatus(${i}, this.value)" class="text-xs border p-1 rounded bg-white outline-none">
+                            <option value="PENDING" ${r.status==='PENDING'?'selected':''}>Pending</option>
+                            <option value="PROCESSING" ${r.status==='PROCESSING'?'selected':''}>Processing</option>
+                            <option value="READY" ${r.status==='READY'?'selected':''}>Ready for Pickup</option>
+                            <option value="COMPLETED" ${r.status==='COMPLETED'?'selected':''}>Completed</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStatus(index, newStatus) {
+            let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
+            requests[index].status = newStatus;
+            localStorage.setItem('doc_requests', JSON.stringify(requests));
+            loadAdminData();
+        }
+    </script>
+</body>
+</html>
