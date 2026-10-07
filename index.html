@@ -7,13 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            emailjs.init("0mxhMsjxyYfnnhBIn");
-        })();
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
     </script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
@@ -44,7 +48,7 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
+    <!-- HERO & MAIN CONTENT -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 w-full flex-1 space-y-8">
 
         <!-- WELCOME BANNER -->
@@ -69,6 +73,7 @@
 
                 <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
                     
+                    <!-- STUDENT INFO GROUP -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Student ID Number *</label>
@@ -82,7 +87,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address (For Notifications) *</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address *</label>
                             <input type="email" id="email" required placeholder="juan.delacruz@example.com" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                         <div>
@@ -110,6 +115,7 @@
                         </div>
                     </div>
 
+                    <!-- FULFILLMENT METHOD (PICKUP OR DELIVERY) -->
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
                         <label class="block text-xs font-semibold text-blue-400 uppercase tracking-wider">Option: How do you want to receive your document? *</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -129,6 +135,7 @@
                             </label>
                         </div>
 
+                        <!-- DELIVERY ADDRESS BOX (HIDDEN BY DEFAULT) -->
                         <div id="deliveryAddressBox" class="hidden pt-2">
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Complete Delivery Address (House No., Street, Brgy, City/Province) *</label>
                             <textarea id="deliveryAddress" rows="2" placeholder="e.g. Block 5 Lot 12, Sunrise Village, Brgy. San Jose, Santa Rosa City, Laguna" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 transition"></textarea>
@@ -140,6 +147,7 @@
                         <textarea id="purpose" rows="2" required placeholder="Employment application, Board Examination, Transfer, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
                     </div>
 
+                    <!-- SUMMARY & ACTION -->
                     <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
                         <div>
                             <span class="text-[11px] text-slate-400 block uppercase font-medium">Total Amount Payable</span>
@@ -171,6 +179,7 @@
                     </button>
                 </div>
 
+                <!-- TRACKER RESULT CARD -->
                 <div id="trackerResult" class="hidden border border-slate-800 rounded-2xl p-6 bg-slate-950 space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-3">
                         <div>
@@ -180,6 +189,7 @@
                         <span id="trBadge" class="px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">PENDING</span>
                     </div>
 
+                    <!-- VISUAL PROGRESS TIMELINE -->
                     <div class="grid grid-cols-3 gap-2 py-2">
                         <div id="step-pending" class="text-center space-y-2 opacity-50">
                             <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-clock"></i></div>
@@ -236,6 +246,11 @@
                     <label class="block text-xs font-semibold text-slate-300 mb-1">GCash Reference Number (13 Digits) *</label>
                     <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs font-mono text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                 </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Receipt Screenshot (Optional)</label>
+                    <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 transition">
+                </div>
             </div>
 
             <button onclick="confirmSubmission()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
@@ -245,6 +260,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-[11px] text-slate-500">
         <p>© 2026 Edulink Solutions. All Rights Reserved. Registrar Document Portal.</p>
     </footer>
@@ -281,7 +297,7 @@
             
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
             if (method === 'DELIVERY' && doc) {
-                price += 150;
+                price += 150; // Delivery fee
             }
             document.getElementById('priceDisplay').innerText = `₱${price.toFixed(2)}`;
         }
@@ -334,22 +350,8 @@
             requests.push(requestRecord);
             localStorage.setItem('doc_requests', JSON.stringify(requests));
 
-            const docObj = DOCUMENT_TYPES.find(d => d.id === tempFormData.docType);
-            const docName = docObj ? docObj.name : tempFormData.docType;
-
-            // AUTO SEND CONFIRMATION EMAIL VIA EMAILJS
-            emailjs.send("service_gwymlqw", "template_kx4ylfq", {
-                to_name: tempFormData.fullName,
-                to_email: tempFormData.email,
-                ref_code: refCode,
-                doc_name: docName,
-                status: 'PENDING (Under Verification)',
-                claim_method: tempFormData.claimMethod,
-                delivery_address: tempFormData.deliveryAddress
-            });
-
             toggleModal('paymentModal');
-            alert(`Request Submitted Successfully!\nA confirmation email has been sent to ${tempFormData.email}.\nYour Reference Code is: ${refCode}`);
+            alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
             document.getElementById('docRequestForm').reset();
             toggleDeliveryAddress();
 
@@ -386,6 +388,7 @@
                 const badge = document.getElementById('trBadge');
                 badge.innerText = found.status;
                 
+                // Reset timeline
                 ['pending', 'processing', 'ready'].forEach(s => {
                     const el = document.getElementById(`step-${s}`);
                     el.className = "text-center space-y-2 opacity-40";
