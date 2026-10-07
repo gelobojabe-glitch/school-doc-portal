@@ -3,86 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edulink Solutions - School Document Request Portal</title>
+    <title>Student Document Request Portal - Edulink Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' } }
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#0f172a' }
+                    }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
-    <!-- HEADER (WALA NANG ADMIN BUTTON) -->
-    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="bg-brand-600 p-2 rounded-lg text-white shadow-md">
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2.5 rounded-xl text-white shadow-lg shadow-blue-500/20">
                     <i class="fa-solid fa-graduation-cap text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-base leading-tight">Edulink Solutions</h1>
-                    <p class="text-xs text-slate-400">School Document Request Portal</p>
+                    <h1 class="font-bold text-base text-white leading-tight tracking-tight">Edulink Portal</h1>
+                    <p class="text-[11px] text-slate-400">Online Student Services</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="switchTab('request')" id="nav-request" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-600 text-white transition">Request Form</button>
-                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition">Status Tracker</button>
+            
+            <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+                <button onclick="switchTab('request')" id="nav-request" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md shadow-blue-600/30 transition duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-file-signature text-xs"></i>
+                    <span>Request Document</span>
+                </button>
+                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    <span>Track Status</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-1">
+    <!-- HERO & MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 w-full flex-1 space-y-8">
+
+        <!-- WELCOME BANNER -->
+        <div class="relative bg-gradient-to-r from-blue-900/40 via-indigo-900/20 to-slate-900 border border-blue-500/20 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-2xl">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-xl space-y-2">
+                <span class="px-3 py-1 text-[11px] font-bold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-widest inline-block">Official Registrar Request Portal</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Request Official Documents Online & Track Real-time.</h2>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Fast, secure, and hassle-free process. Submit your request details, upload GCash payment proof, and track progress anytime.</p>
+            </div>
+        </div>
 
         <!-- TAB 1: REQUEST FORM -->
         <div id="tab-request" class="space-y-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="bg-slate-900 text-white p-6">
-                    <h2 class="text-lg font-bold">Online Document Application</h2>
-                    <p class="text-xs text-slate-400">Fill in the required information to request official school documents.</p>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-blue-400"></i> Document Application Form
+                    </h3>
+                    <span class="text-[11px] text-slate-500">* All fields are required</span>
                 </div>
 
-                <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
+                    
+                    <!-- STUDENT INFO GROUP -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Student ID Number *</label>
-                            <input type="text" id="studentId" required placeholder="e.g. 2023-01234" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Student ID Number *</label>
+                            <input type="text" id="studentId" required placeholder="e.g. 2026-01234" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Full Name *</label>
-                            <input type="text" id="fullName" required placeholder="Juan Dela Cruz" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Full Name (Last, First, Middle) *</label>
+                            <input type="text" id="fullName" required placeholder="e.g. Dela Cruz, Juan A." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email Address *</label>
-                            <input type="email" id="email" required placeholder="student@example.com" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address (for updates) *</label>
+                            <input type="email" id="email" required placeholder="juan.delacruz@example.com" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Mobile Number *</label>
-                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mobile Number *</label>
+                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Course / Grade Level *</label>
-                            <input type="text" id="course" required placeholder="BS Information Technology" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Course / Year & Section *</label>
+                            <input type="text" id="course" required placeholder="BS Information Technology - 3A" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Document Requested *</label>
-                            <select id="docType" onchange="updatePrice()" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
-                                <option value="">-- Select Document --</option>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Select Document *</label>
+                            <select id="docType" onchange="updatePrice()" required class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                                <option value="">-- Choose Document --</option>
                                 <option value="tor">Transcript of Records (TOR) - ₱300</option>
                                 <option value="cert_grad">Certificate of Graduation - ₱150</option>
                                 <option value="cert_enroll">Certificate of Enrollment - ₱100</option>
@@ -94,48 +116,73 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Purpose of Request *</label>
-                        <textarea id="purpose" rows="2" required placeholder="Employment, Transfer, Board Exam, etc." class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Purpose of Request *</label>
+                        <textarea id="purpose" rows="2" required placeholder="Employment application, Board Examination, Transferring to another school, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
                     </div>
 
-                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <!-- SUMMARY & ACTION -->
+                    <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
                         <div>
-                            <span class="text-xs text-slate-500 block">Total Payable Amount</span>
-                            <span id="priceDisplay" class="text-2xl font-bold text-slate-900">₱0.00</span>
+                            <span class="text-[11px] text-slate-400 block uppercase font-medium">Estimated Processing Fee</span>
+                            <span id="priceDisplay" class="text-2xl font-extrabold text-blue-400">₱0.00</span>
                         </div>
-                        <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow-md transition text-sm flex items-center gap-2">
+                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition duration-200 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
                             <span>Proceed to Payment</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>
 
         <!-- TAB 2: TRACKER -->
         <div id="tab-tracker" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h2 class="text-lg font-bold text-slate-800 mb-1">Track Request Status</h2>
-                <p class="text-xs text-slate-500 mb-6">Enter your Reference Code (e.g., DOC-2026-XXXX) to check current progress.</p>
-
-                <div class="flex gap-2 mb-6">
-                    <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500 uppercase">
-                    <button onclick="trackRequest()" class="px-6 py-2 bg-brand-600 text-white text-sm font-semibold rounded-lg hover:bg-brand-700 transition">Track</button>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                    <h3 class="text-base font-bold text-white mb-1">Track Application Status</h3>
+                    <p class="text-xs text-slate-400">Enter your Reference Code (e.g. DOC-2026-XXXX) given upon request submission.</p>
                 </div>
 
-                <div id="trackerResult" class="hidden border rounded-xl p-5 bg-slate-50 space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-sm font-mono text-white placeholder-slate-500 uppercase outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                    <button onclick="trackRequest()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Track Status</span>
+                    </button>
+                </div>
+
+                <!-- TRACKER RESULT CARD -->
+                <div id="trackerResult" class="hidden border border-slate-800 rounded-2xl p-6 bg-slate-950 space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-3">
                         <div>
-                            <span class="text-xs text-slate-400 block">Reference Number</span>
-                            <span class="font-bold text-slate-800 text-base" id="trRef">---</span>
+                            <span class="text-[11px] text-slate-400 block uppercase">Reference Number</span>
+                            <span class="font-mono font-bold text-blue-400 text-lg" id="trRef">---</span>
                         </div>
-                        <span id="trBadge" class="px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800">PENDING</span>
+                        <span id="trBadge" class="px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">PENDING</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 text-xs text-slate-600">
-                        <div><strong class="text-slate-800">Student Name:</strong> <p id="trName" class="text-slate-600">---</p></div>
-                        <div><strong class="text-slate-800">Document Requested:</strong> <p id="trDoc" class="text-slate-600">---</p></div>
-                        <div><strong class="text-slate-800">Date Applied:</strong> <p id="trDate" class="text-slate-600">---</p></div>
-                        <div><strong class="text-slate-800">GCash Ref No.:</strong> <p id="trGcash" class="text-slate-600">---</p></div>
+
+                    <!-- VISUAL PROGRESS TIMELINE -->
+                    <div class="grid grid-cols-3 gap-2 py-2">
+                        <div id="step-pending" class="text-center space-y-2 opacity-50">
+                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-clock"></i></div>
+                            <span class="text-[10px] font-bold block uppercase text-slate-400">Submitted</span>
+                        </div>
+                        <div id="step-processing" class="text-center space-y-2 opacity-50">
+                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-spinner"></i></div>
+                            <span class="text-[10px] font-bold block uppercase text-slate-400">Processing</span>
+                        </div>
+                        <div id="step-ready" class="text-center space-y-2 opacity-50">
+                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-box-archive"></i></div>
+                            <span class="text-[10px] font-bold block uppercase text-slate-400">Ready for Pickup</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <div><span class="text-slate-400">Student Name:</span> <p id="trName" class="font-semibold text-white mt-0.5">---</p></div>
+                        <div><span class="text-slate-400">Document Requested:</span> <p id="trDoc" class="font-semibold text-white mt-0.5">---</p></div>
+                        <div><span class="text-slate-400">Date Applied:</span> <p id="trDate" class="font-semibold text-white mt-0.5">---</p></div>
+                        <div><span class="text-slate-400">GCash Ref No.:</span> <p id="trGcash" class="font-mono font-semibold text-white mt-0.5">---</p></div>
                     </div>
                 </div>
             </div>
@@ -144,34 +191,51 @@
     </main>
 
     <!-- PAYMENT MODAL -->
-    <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative space-y-4 max-h-[90vh] overflow-y-auto">
-            <button onclick="toggleModal('paymentModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="paymentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 relative space-y-5 shadow-2xl">
+            <button onclick="toggleModal('paymentModal')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-lg"></i></button>
             
-            <h3 class="text-base font-bold text-slate-800">GCash Payment Upload</h3>
-            <p class="text-xs text-slate-500">Scan QR Code or send total amount to official school GCash account.</p>
-
-            <div class="bg-brand-50 p-4 rounded-xl text-center space-y-2 border border-brand-100">
-                <div class="w-36 h-36 bg-white mx-auto border flex items-center justify-center rounded-lg shadow-sm">
-                    <i class="fa-solid fa-qrcode text-7xl text-slate-800"></i>
+            <div class="text-center space-y-1">
+                <div class="bg-blue-600/10 text-blue-400 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-blue-500/20">
+                    <i class="fa-solid fa-qrcode text-xl"></i>
                 </div>
-                <p class="text-xs font-bold text-slate-800">Account Name: Edulink Solutions Inc.</p>
-                <p class="text-xs text-slate-600">Account No.: 0917-890-1234</p>
+                <h3 class="text-lg font-bold text-white">GCash Payment Verification</h3>
+                <p class="text-xs text-slate-400">Scan QR Code or send the exact amount to our official account.</p>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">GCash Reference Number (13 Digits) *</label>
-                <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500">
+            <div class="bg-slate-950 p-4 rounded-2xl text-center space-y-2 border border-slate-800">
+                <div class="w-32 h-32 bg-white mx-auto border rounded-xl flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-qrcode text-7xl text-slate-900"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-white">Edulink Solutions Inc.</p>
+                    <p class="text-xs font-mono text-blue-400">0917-890-1234</p>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Upload Receipt Screenshot *</label>
-                <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">GCash Reference Number (13 Digits) *</label>
+                    <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs font-mono text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Receipt Screenshot (Optional)</label>
+                    <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 transition">
+                </div>
             </div>
 
-            <button onclick="confirmSubmission()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition">Confirm & Complete Request</button>
+            <button onclick="confirmSubmission()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
+                <span>Confirm & Send Application</span>
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-[11px] text-slate-500">
+        <p>© 2026 Edulink Solutions. All Rights Reserved. Registrar Document Portal.</p>
+    </footer>
 
     <script>
         const DOCUMENT_TYPES = [
@@ -200,11 +264,11 @@
             ['request', 'tracker'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`nav-${t}`);
-                if (btn) btn.className = "px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:bg-slate-800 transition";
+                if (btn) btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition duration-200 flex items-center gap-2";
             });
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`nav-${tab}`);
-            if (activeBtn) activeBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-600 text-white transition";
+            if (activeBtn) activeBtn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md shadow-blue-600/30 transition duration-200 flex items-center gap-2";
         }
 
         function handleFormSubmit(e) {
@@ -263,13 +327,37 @@
                 
                 const badge = document.getElementById('trBadge');
                 badge.innerText = found.status;
-                if(found.status === 'READY') badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800";
-                else if(found.status === 'PROCESSING') badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800";
-                else badge.className = "px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800";
+                
+                // Reset timeline
+                ['pending', 'processing', 'ready'].forEach(s => {
+                    const el = document.getElementById(`step-${s}`);
+                    el.className = "text-center space-y-2 opacity-40";
+                    el.children[0].className = "w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-400";
+                });
+
+                if(found.status === 'READY' || found.status === 'COMPLETED') {
+                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider";
+                    activateStep('step-pending');
+                    activateStep('step-processing');
+                    activateStep('step-ready', 'bg-emerald-500 text-slate-950 border-emerald-400');
+                } else if(found.status === 'PROCESSING') {
+                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider";
+                    activateStep('step-pending');
+                    activateStep('step-processing', 'bg-indigo-500 text-white border-indigo-400');
+                } else {
+                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider";
+                    activateStep('step-pending', 'bg-amber-500 text-slate-950 border-amber-400');
+                }
             } else {
                 alert('Reference Code not found.');
                 resDiv.classList.add('hidden');
             }
+        }
+
+        function activateStep(id, activeClass = 'bg-blue-600 text-white border-blue-400') {
+            const el = document.getElementById(id);
+            el.className = "text-center space-y-2 opacity-100";
+            el.children[0].className = `w-8 h-8 mx-auto rounded-full border flex items-center justify-center text-xs font-bold shadow-lg ${activeClass}`;
         }
     </script>
 </body>
