@@ -115,7 +115,7 @@
                         </div>
                     </div>
 
-                    <!-- FULFILLMENT METHOD (PICKUP OR DELIVERY) -->
+                    <!-- FULFILLMENT METHOD -->
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
                         <label class="block text-xs font-semibold text-blue-400 uppercase tracking-wider">Option: How do you want to receive your document? *</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -135,7 +135,7 @@
                             </label>
                         </div>
 
-                        <!-- DELIVERY ADDRESS BOX (HIDDEN BY DEFAULT) -->
+                        <!-- DELIVERY ADDRESS BOX -->
                         <div id="deliveryAddressBox" class="hidden pt-2">
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Complete Delivery Address (House No., Street, Brgy, City/Province) *</label>
                             <textarea id="deliveryAddress" rows="2" placeholder="e.g. Block 5 Lot 12, Sunrise Village, Brgy. San Jose, Santa Rosa City, Laguna" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 transition"></textarea>
@@ -277,6 +277,16 @@
 
         let tempFormData = {};
 
+        // REAL-TIME STORAGE SYNC LISTENER
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'doc_requests') {
+                const currentRef = document.getElementById('trackRefInput').value.trim();
+                if (currentRef) {
+                    trackRequest(); // Refresh tracker instantly when admin changes status
+                }
+            }
+        });
+
         function toggleDeliveryAddress() {
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
             const addrBox = document.getElementById('deliveryAddressBox');
@@ -297,7 +307,7 @@
             
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
             if (method === 'DELIVERY' && doc) {
-                price += 150; // Delivery fee
+                price += 150;
             }
             document.getElementById('priceDisplay').innerText = `₱${price.toFixed(2)}`;
         }
@@ -388,7 +398,7 @@
                 const badge = document.getElementById('trBadge');
                 badge.innerText = found.status;
                 
-                // Reset timeline
+                // Reset step timeline
                 ['pending', 'processing', 'ready'].forEach(s => {
                     const el = document.getElementById(`step-${s}`);
                     el.className = "text-center space-y-2 opacity-40";
