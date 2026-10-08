@@ -7,14 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SUPABASE CLIENT JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#0f172a' }
-                    }
+                    colors: { brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#0f172a' } }
                 }
             }
         }
@@ -50,10 +51,7 @@
 
     <!-- HERO & MAIN CONTENT -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 w-full flex-1 space-y-8">
-
-        <!-- WELCOME BANNER -->
         <div class="relative bg-gradient-to-r from-blue-900/40 via-indigo-900/20 to-slate-900 border border-blue-500/20 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-xl space-y-2">
                 <span class="px-3 py-1 text-[11px] font-bold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-widest inline-block">Official Registrar Request Portal</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Pick-up or Door-to-Door Courier Delivery.</h2>
@@ -68,42 +66,39 @@
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-pen-to-square text-blue-400"></i> Document Application Form
                     </h3>
-                    <span class="text-[11px] text-slate-500">* All required fields</span>
                 </div>
 
                 <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
-                    
-                    <!-- STUDENT INFO GROUP -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Student ID Number *</label>
-                            <input type="text" id="studentId" required placeholder="e.g. 2026-01234" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <input type="text" id="studentId" required placeholder="e.g. 2026-01234" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Full Name (Last, First, Middle) *</label>
-                            <input type="text" id="fullName" required placeholder="e.g. Dela Cruz, Juan A." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Full Name *</label>
+                            <input type="text" id="fullName" required placeholder="e.g. Dela Cruz, Juan A." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address *</label>
-                            <input type="email" id="email" required placeholder="juan.delacruz@example.com" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email *</label>
+                            <input type="email" id="email" required placeholder="juan@example.com" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mobile Number *</label>
-                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <input type="tel" id="mobile" required placeholder="09171234567" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Course / Year & Section *</label>
-                            <input type="text" id="course" required placeholder="BS Information Technology - 3A" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <input type="text" id="course" required placeholder="BSIT - 3A" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1.5">Select Document *</label>
-                            <select id="docType" onchange="updatePrice()" required class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                            <select id="docType" onchange="updatePrice()" required class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition">
                                 <option value="">-- Choose Document --</option>
                                 <option value="tor">Transcript of Records (TOR) - ₱300</option>
                                 <option value="cert_grad">Certificate of Graduation - ₱150</option>
@@ -115,50 +110,33 @@
                         </div>
                     </div>
 
-                    <!-- FULFILLMENT METHOD -->
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
                         <label class="block text-xs font-semibold text-blue-400 uppercase tracking-wider">Option: How do you want to receive your document? *</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
                                 <input type="radio" name="claimMethod" value="PICKUP" checked onchange="toggleDeliveryAddress()" class="accent-blue-500">
-                                <div>
-                                    <span class="text-xs font-bold text-white block">🏫 School Pick-up</span>
-                                    <span class="text-[10px] text-slate-400">Registrar Office (Free)</span>
-                                </div>
+                                <div><span class="text-xs font-bold text-white block">🏫 School Pick-up</span><span class="text-[10px] text-slate-400">Free</span></div>
                             </label>
                             <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
                                 <input type="radio" name="claimMethod" value="DELIVERY" onchange="toggleDeliveryAddress()" class="accent-blue-500">
-                                <div>
-                                    <span class="text-xs font-bold text-white block">🚚 Express Courier Delivery</span>
-                                    <span class="text-[10px] text-slate-400">Door-to-door (+₱150.00 Fee)</span>
-                                </div>
+                                <div><span class="text-xs font-bold text-white block">🚚 Courier Delivery</span><span class="text-[10px] text-slate-400">+₱150.00 Fee</span></div>
                             </label>
                         </div>
 
-                        <!-- DELIVERY ADDRESS BOX -->
                         <div id="deliveryAddressBox" class="hidden pt-2">
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Complete Delivery Address (House No., Street, Brgy, City/Province) *</label>
-                            <textarea id="deliveryAddress" rows="2" placeholder="e.g. Block 5 Lot 12, Sunrise Village, Brgy. San Jose, Santa Rosa City, Laguna" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 transition"></textarea>
+                            <textarea id="deliveryAddress" rows="2" placeholder="Complete Delivery Address..." class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition"></textarea>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Purpose of Request *</label>
-                        <textarea id="purpose" rows="2" required placeholder="Employment application, Board Examination, Transfer, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Purpose *</label>
+                        <textarea id="purpose" rows="2" required placeholder="Employment application, Board Exam, Transfer, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition"></textarea>
                     </div>
 
-                    <!-- SUMMARY & ACTION -->
-                    <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
-                        <div>
-                            <span class="text-[11px] text-slate-400 block uppercase font-medium">Total Amount Payable</span>
-                            <span id="priceDisplay" class="text-2xl font-extrabold text-blue-400">₱0.00</span>
-                        </div>
-                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition duration-200 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
-                            <span>Proceed to Payment</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
+                    <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center">
+                        <div><span class="text-[11px] text-slate-400 block uppercase font-medium">Total Amount Payable</span><span id="priceDisplay" class="text-2xl font-extrabold text-blue-400">₱0.00</span></div>
+                        <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"><span>Proceed to Payment</span><i class="fa-solid fa-arrow-right text-xs"></i></button>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -166,182 +144,86 @@
         <!-- TAB 2: TRACKER -->
         <div id="tab-tracker" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-                <div>
-                    <h3 class="text-base font-bold text-white mb-1">Track Application Status</h3>
-                    <p class="text-xs text-slate-400">Enter your Reference Code (e.g. DOC-2026-XXXX) given upon request submission.</p>
-                </div>
-
+                <div><h3 class="text-base font-bold text-white mb-1">Track Application Status</h3><p class="text-xs text-slate-400">Enter Reference Code (e.g. DOC-2026-XXXX)</p></div>
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-sm font-mono text-white placeholder-slate-500 uppercase outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
-                    <button onclick="trackRequest()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Track Status</span>
-                    </button>
+                    <input type="text" id="trackRefInput" placeholder="DOC-2026-1234" class="flex-1 px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-sm font-mono text-white uppercase outline-none focus:border-blue-500 transition">
+                    <button onclick="trackRequest()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"><i class="fa-solid fa-magnifying-glass"></i><span>Track Status</span></button>
                 </div>
-
-                <!-- TRACKER RESULT CARD -->
                 <div id="trackerResult" class="hidden border border-slate-800 rounded-2xl p-6 bg-slate-950 space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-3">
-                        <div>
-                            <span class="text-[11px] text-slate-400 block uppercase">Reference Number</span>
-                            <span class="font-mono font-bold text-blue-400 text-lg" id="trRef">---</span>
-                        </div>
-                        <span id="trBadge" class="px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">PENDING</span>
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <div><span class="text-[11px] text-slate-400 block uppercase">Reference Number</span><span class="font-mono font-bold text-blue-400 text-lg" id="trRef">---</span></div>
+                        <span id="trBadge" class="px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">PENDING</span>
                     </div>
-
-                    <!-- VISUAL PROGRESS TIMELINE -->
-                    <div class="grid grid-cols-3 gap-2 py-2">
-                        <div id="step-pending" class="text-center space-y-2 opacity-50">
-                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-clock"></i></div>
-                            <span class="text-[10px] font-bold block uppercase text-slate-400">Submitted</span>
-                        </div>
-                        <div id="step-processing" class="text-center space-y-2 opacity-50">
-                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-spinner"></i></div>
-                            <span class="text-[10px] font-bold block uppercase text-slate-400">Processing</span>
-                        </div>
-                        <div id="step-ready" class="text-center space-y-2 opacity-50">
-                            <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-box-archive"></i></div>
-                            <span id="stepReadyLabel" class="text-[10px] font-bold block uppercase text-slate-400">Ready</span>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-900 p-4 rounded-xl border border-slate-800">
                         <div><span class="text-slate-400">Student Name:</span> <p id="trName" class="font-semibold text-white mt-0.5">---</p></div>
                         <div><span class="text-slate-400">Document Requested:</span> <p id="trDoc" class="font-semibold text-white mt-0.5">---</p></div>
                         <div><span class="text-slate-400">Fulfillment Method:</span> <p id="trMethod" class="font-semibold text-blue-400 mt-0.5">---</p></div>
                         <div><span class="text-slate-400">GCash Ref No.:</span> <p id="trGcash" class="font-mono font-semibold text-white mt-0.5">---</p></div>
-                        <div id="trAddrRow" class="col-span-1 sm:col-span-2 hidden"><span class="text-slate-400">Delivery Address:</span> <p id="trAddr" class="font-semibold text-white mt-0.5">---</p></div>
                     </div>
                 </div>
             </div>
         </div>
-
     </main>
 
     <!-- PAYMENT MODAL -->
     <div id="paymentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 relative space-y-5 shadow-2xl">
-            <button onclick="toggleModal('paymentModal')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-            
-            <div class="text-center space-y-1">
-                <div class="bg-blue-600/10 text-blue-400 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-blue-500/20">
-                    <i class="fa-solid fa-qrcode text-xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-white">GCash Payment Verification</h3>
-                <p class="text-xs text-slate-400">Scan QR Code or send total amount to our GCash account.</p>
-            </div>
-
-            <div class="bg-slate-950 p-4 rounded-2xl text-center space-y-2 border border-slate-800">
-                <div class="w-32 h-32 bg-white mx-auto border rounded-xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-qrcode text-7xl text-slate-900"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-white">Edulink Solutions Inc.</p>
-                    <p class="text-xs font-mono text-blue-400">0917-890-1234</p>
-                </div>
-            </div>
-
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 relative space-y-5 shadow-2xl">
+            <button onclick="toggleModal('paymentModal')" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-1"><h3 class="text-lg font-bold text-white">GCash Payment Verification</h3></div>
             <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">GCash Reference Number (13 Digits) *</label>
-                    <input type="text" id="gcashRef" maxlength="13" placeholder="e.g. 1029384756102" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs font-mono text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Receipt Screenshot (Optional)</label>
-                    <input type="file" id="receiptFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 transition">
-                </div>
+                <input type="text" id="gcashRef" maxlength="13" placeholder="GCash Reference Number (13 Digits)" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs font-mono text-white outline-none focus:border-blue-500">
             </div>
-
-            <button onclick="confirmSubmission()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
-                <span>Confirm & Send Application</span>
-                <i class="fa-solid fa-paper-plane text-xs"></i>
-            </button>
+            <button onclick="confirmSubmission()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl transition flex items-center justify-center gap-2"><span>Confirm & Send Application</span></button>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-[11px] text-slate-500">
-        <p>© 2026 Edulink Solutions. All Rights Reserved. Registrar Document Portal.</p>
-    </footer>
-
     <script>
-        const DOCUMENT_TYPES = [
-            { id: 'tor', name: 'Transcript of Records (TOR)', price: 300 },
-            { id: 'cert_grad', name: 'Certificate of Graduation', price: 150 },
-            { id: 'cert_enroll', name: 'Certificate of Enrollment', price: 100 },
-            { id: 'good_moral', name: 'Certificate of Good Moral', price: 150 },
-            { id: 'diploma_dup', name: 'Diploma (Duplicate Copy)', price: 500 },
-            { id: 'form137', name: 'Form 137 / SF10', price: 200 }
-        ];
+        // SUPABASE CONFIGURATION
+        const SUPABASE_URL = "https://your-project.supabase.co";
+        const SUPABASE_KEY = "your-anon-key";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let tempFormData = {};
-
-        // BROADCAST CHANNEL AND STORAGE EVENT LISTENERS FOR LIVE SYNC
-        const portalChannel = new BroadcastChannel('edulink_sync_channel');
-
-        portalChannel.onmessage = (event) => {
-            if (event.data.type === 'STATUS_UPDATED') {
-                const currentRef = document.getElementById('trackRefInput').value.trim();
-                if (currentRef) {
-                    trackRequest(); // Refresh tracker instantly
-                }
-            }
+        const DOCUMENT_TYPES = {
+            'tor': { name: 'Transcript of Records (TOR)', price: 300 },
+            'cert_grad': { name: 'Certificate of Graduation', price: 150 },
+            'cert_enroll': { name: 'Certificate of Enrollment', price: 100 },
+            'good_moral': { name: 'Certificate of Good Moral', price: 150 },
+            'diploma_dup': { name: 'Diploma (Duplicate Copy)', price: 500 },
+            'form137': { name: 'Form 137 / SF10', price: 200 }
         };
 
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'doc_requests') {
-                const currentRef = document.getElementById('trackRefInput').value.trim();
-                if (currentRef) {
-                    trackRequest();
-                }
-            }
-        });
+        let tempFormData = {};
 
         function toggleDeliveryAddress() {
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
             const addrBox = document.getElementById('deliveryAddressBox');
-            if (method === 'DELIVERY') {
-                addrBox.classList.remove('hidden');
-                document.getElementById('deliveryAddress').setAttribute('required', 'required');
-            } else {
-                addrBox.classList.add('hidden');
-                document.getElementById('deliveryAddress').removeAttribute('required');
-            }
+            addrBox.className = method === 'DELIVERY' ? 'pt-2' : 'hidden';
             updatePrice();
         }
 
         function updatePrice() {
             const val = document.getElementById('docType').value;
-            const doc = DOCUMENT_TYPES.find(d => d.id === val);
+            const doc = DOCUMENT_TYPES[val];
             let price = doc ? doc.price : 0;
-            
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
-            if (method === 'DELIVERY' && doc) {
-                price += 150;
-            }
+            if (method === 'DELIVERY' && doc) price += 150;
             document.getElementById('priceDisplay').innerText = `₱${price.toFixed(2)}`;
         }
 
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 
         function switchTab(tab) {
             ['request', 'tracker'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`nav-${t}`);
-                if (btn) btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition duration-200 flex items-center gap-2";
+                document.getElementById(`nav-${t}`).className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition flex items-center gap-2";
             });
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-${tab}`);
-            if (activeBtn) activeBtn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md shadow-blue-600/30 transition duration-200 flex items-center gap-2";
+            document.getElementById(`nav-${tab}`).className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition flex items-center gap-2";
         }
 
         function handleFormSubmit(e) {
             e.preventDefault();
             const method = document.querySelector('input[name="claimMethod"]:checked').value;
-            
             tempFormData = {
                 studentId: document.getElementById('studentId').value,
                 fullName: document.getElementById('fullName').value,
@@ -350,98 +232,55 @@
                 course: document.getElementById('course').value,
                 docType: document.getElementById('docType').value,
                 claimMethod: method,
-                deliveryAddress: method === 'DELIVERY' ? document.getElementById('deliveryAddress').value : 'N/A (School Pick-up)',
+                deliveryAddress: method === 'DELIVERY' ? document.getElementById('deliveryAddress').value : 'N/A (Pick-up)',
                 purpose: document.getElementById('purpose').value,
                 date: new Date().toLocaleDateString()
             };
             toggleModal('paymentModal');
         }
 
-        function confirmSubmission() {
+        async function confirmSubmission() {
             const gcashRef = document.getElementById('gcashRef').value;
-            if (!gcashRef || gcashRef.length < 10) {
-                alert('Please enter a valid GCash Reference Number.');
-                return;
-            }
+            if (!gcashRef || gcashRef.length < 10) { alert('Valid GCash Ref required'); return; }
 
             const refCode = 'DOC-2026-' + Math.floor(1000 + Math.random() * 9000);
             const requestRecord = { ...tempFormData, refCode, gcashRef, status: 'PENDING' };
 
-            let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
-            requests.push(requestRecord);
-            localStorage.setItem('doc_requests', JSON.stringify(requests));
+            // SAVE TO SUPABASE
+            const { error } = await _supabase.from('doc_requests').insert([requestRecord]);
 
-            // I-broadcast sa Admin tab
-            portalChannel.postMessage({ type: 'NEW_REQUEST', data: requestRecord });
-
-            toggleModal('paymentModal');
-            alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
-            document.getElementById('docRequestForm').reset();
-            toggleDeliveryAddress();
-
-            document.getElementById('trackRefInput').value = refCode;
-            switchTab('tracker');
-            trackRequest();
+            if (error) {
+                alert('Error submitting request: ' + error.message);
+            } else {
+                toggleModal('paymentModal');
+                alert(`Request Submitted! Ref Code: ${refCode}`);
+                document.getElementById('docRequestForm').reset();
+                document.getElementById('trackRefInput').value = refCode;
+                switchTab('tracker');
+                trackRequest();
+            }
         }
 
-        function trackRequest() {
+        async function trackRequest() {
             const ref = document.getElementById('trackRefInput').value.trim().toUpperCase();
-            const requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
-            const found = requests.find(r => r.refCode === ref);
+            if (!ref) return;
+
+            const { data, error } = await _supabase.from('doc_requests').select('*').eq('refCode', ref).single();
 
             const resDiv = document.getElementById('trackerResult');
-            if (found) {
+            if (data) {
                 resDiv.classList.remove('hidden');
-                document.getElementById('trRef').innerText = found.refCode;
-                document.getElementById('trName').innerText = found.fullName;
-                const docObj = DOCUMENT_TYPES.find(d => d.id === found.docType);
-                document.getElementById('trDoc').innerText = docObj ? docObj.name : found.docType;
-                document.getElementById('trMethod').innerText = found.claimMethod === 'DELIVERY' ? '🚚 Express Delivery' : '🏫 School Pick-up';
-                document.getElementById('trGcash').innerText = found.gcashRef;
-                
-                const addrRow = document.getElementById('trAddrRow');
-                if (found.claimMethod === 'DELIVERY') {
-                    addrRow.classList.remove('hidden');
-                    document.getElementById('trAddr').innerText = found.deliveryAddress;
-                    document.getElementById('stepReadyLabel').innerText = 'Out for Delivery';
-                } else {
-                    addrRow.classList.add('hidden');
-                    document.getElementById('stepReadyLabel').innerText = 'Ready for Pickup';
-                }
-
-                const badge = document.getElementById('trBadge');
-                badge.innerText = found.status;
-                
-                // Reset step timeline
-                ['pending', 'processing', 'ready'].forEach(s => {
-                    const el = document.getElementById(`step-${s}`);
-                    el.className = "text-center space-y-2 opacity-40";
-                    el.children[0].className = "w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-400";
-                });
-
-                if(found.status === 'READY' || found.status === 'COMPLETED') {
-                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider";
-                    activateStep('step-pending');
-                    activateStep('step-processing');
-                    activateStep('step-ready', 'bg-emerald-500 text-slate-950 border-emerald-400');
-                } else if(found.status === 'PROCESSING') {
-                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider";
-                    activateStep('step-pending');
-                    activateStep('step-processing', 'bg-indigo-500 text-white border-indigo-400');
-                } else {
-                    badge.className = "px-3.5 py-1.5 text-xs font-extrabold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider";
-                    activateStep('step-pending', 'bg-amber-500 text-slate-950 border-amber-400');
-                }
+                document.getElementById('trRef').innerText = data.refCode;
+                document.getElementById('trName').innerText = data.fullName;
+                const docObj = DOCUMENT_TYPES[data.docType];
+                document.getElementById('trDoc').innerText = docObj ? docObj.name : data.docType;
+                document.getElementById('trMethod').innerText = data.claimMethod === 'DELIVERY' ? '🚚 Delivery' : '🏫 Pick-up';
+                document.getElementById('trGcash').innerText = data.gcashRef;
+                document.getElementById('trBadge').innerText = data.status;
             } else {
                 alert('Reference Code not found.');
                 resDiv.classList.add('hidden');
             }
-        }
-
-        function activateStep(id, activeClass = 'bg-blue-600 text-white border-blue-400') {
-            const el = document.getElementById(id);
-            el.className = "text-center space-y-2 opacity-100";
-            el.children[0].className = `w-8 h-8 mx-auto rounded-full border flex items-center justify-center text-xs font-bold shadow-lg ${activeClass}`;
         }
     </script>
 </body>
