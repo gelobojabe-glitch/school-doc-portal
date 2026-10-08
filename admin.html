@@ -188,10 +188,18 @@
 
         let currentFilter = 'ALL';
 
-        // REAL-TIME STORAGE SYNC LISTENER
+        // BROADCAST CHANNEL AND STORAGE EVENT LISTENERS FOR LIVE SYNC
+        const portalChannel = new BroadcastChannel('edulink_sync_channel');
+        
+        portalChannel.onmessage = (event) => {
+            if (event.data.type === 'NEW_REQUEST') {
+                loadDashboard(); // Auto-refresh kapag may bagong request
+            }
+        };
+
         window.addEventListener('storage', (e) => {
             if (e.key === 'doc_requests') {
-                loadDashboard(); // Auto-refresh when student submits new request
+                loadDashboard();
             }
         });
 
@@ -318,6 +326,9 @@
                 requests[idx].status = newStatus;
                 localStorage.setItem('doc_requests', JSON.stringify(requests));
                 loadDashboard();
+
+                // I-broadcast ang pagbabago sa Student tab
+                portalChannel.postMessage({ type: 'STATUS_UPDATED', refCode: refCode, status: newStatus });
             }
         }
     </script>
