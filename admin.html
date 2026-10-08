@@ -93,7 +93,7 @@
                         <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400"><i class="fa-solid fa-folder-open"></i></div>
                     </div>
                     <div class="text-2xl font-bold text-white" id="statTotal">0</div>
-                    <p class="text-[10px] text-slate-500 mt-1">All time applications</p>
+                    <p class="text-[10px] text-slate-500 mt-1">All applications</p>
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-sm">
@@ -107,11 +107,11 @@
 
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-sm">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs text-slate-400 font-medium">In Processing</span>
-                        <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400"><i class="fa-solid fa-spinner"></i></div>
+                        <span class="text-xs text-slate-400 font-medium">For Delivery</span>
+                        <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400"><i class="fa-solid fa-truck-fast"></i></div>
                     </div>
-                    <div class="text-2xl font-bold text-indigo-400" id="statProcessing">0</div>
-                    <p class="text-[10px] text-slate-500 mt-1">Currently preparing</p>
+                    <div class="text-2xl font-bold text-indigo-400" id="statDelivery">0</div>
+                    <p class="text-[10px] text-slate-500 mt-1">Courier orders</p>
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-sm">
@@ -120,7 +120,7 @@
                         <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-circle-check"></i></div>
                     </div>
                     <div class="text-2xl font-bold text-emerald-400" id="statReady">0</div>
-                    <p class="text-[10px] text-slate-500 mt-1">Ready for pickup</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Completed requests</p>
                 </div>
 
                 <div class="col-span-2 md:col-span-1 bg-gradient-to-br from-blue-900/40 to-slate-900 border border-blue-500/30 p-4 rounded-2xl shadow-sm">
@@ -129,7 +129,7 @@
                         <div class="p-2 rounded-lg bg-blue-500/20 text-blue-300"><i class="fa-solid fa-peso-sign"></i></div>
                     </div>
                     <div class="text-2xl font-bold text-blue-200" id="statRevenue">₱0.00</div>
-                    <p class="text-[10px] text-blue-400/70 mt-1">Calculated fees</p>
+                    <p class="text-[10px] text-blue-400/70 mt-1">Doc + Delivery fees</p>
                 </div>
             </div>
 
@@ -140,7 +140,7 @@
                 <div class="p-4 sm:p-6 border-b border-slate-800 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
                     <div class="relative flex-1 max-w-md">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-sm"></i>
-                        <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Search by Student ID, Name, or Ref Code..." class="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
+                        <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Search Student ID, Name, or Ref Code..." class="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
                     </div>
 
                     <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
@@ -159,9 +159,10 @@
                                 <th class="py-3.5 px-4">Ref Code</th>
                                 <th class="py-3.5 px-4">Student Details</th>
                                 <th class="py-3.5 px-4">Document Requested</th>
-                                <th class="py-3.5 px-4">GCash Ref / Payment</th>
-                                <th class="py-3.5 px-4">Current Status</th>
-                                <th class="py-3.5 px-4 text-center">Manage Status</th>
+                                <th class="py-3.5 px-4">Method / Address</th>
+                                <th class="py-3.5 px-4">GCash Ref</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-center">Manage</th>
                             </tr>
                         </thead>
                         <tbody id="adminTableBody" class="divide-y divide-slate-800/60">
@@ -218,12 +219,14 @@
             // Stats calculation
             document.getElementById('statTotal').innerText = requests.length;
             document.getElementById('statPending').innerText = requests.filter(r => r.status === 'PENDING').length;
-            document.getElementById('statProcessing').innerText = requests.filter(r => r.status === 'PROCESSING').length;
+            document.getElementById('statDelivery').innerText = requests.filter(r => r.claimMethod === 'DELIVERY').length;
             document.getElementById('statReady').innerText = requests.filter(r => r.status === 'READY' || r.status === 'COMPLETED').length;
 
             let totalRev = requests.reduce((acc, r) => {
                 const doc = DOCUMENT_TYPES[r.docType];
-                return acc + (doc ? doc.price : 0);
+                let base = doc ? doc.price : 0;
+                if (r.claimMethod === 'DELIVERY') base += 150;
+                return acc + base;
             }, 0);
             document.getElementById('statRevenue').innerText = `₱${totalRev.toFixed(2)}`;
 
@@ -248,12 +251,13 @@
         function renderTable(data) {
             const tbody = document.getElementById('adminTableBody');
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">No requests match the criteria.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No requests match the criteria.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = data.map((r, i) => {
+            tbody.innerHTML = data.map((r) => {
                 const docInfo = DOCUMENT_TYPES[r.docType] || { name: r.docType, price: 0 };
+                const totalPrice = docInfo.price + (r.claimMethod === 'DELIVERY' ? 150 : 0);
                 
                 let badgeStyle = "bg-amber-500/10 text-amber-400 border-amber-500/20";
                 if(r.status === 'PROCESSING') badgeStyle = "bg-indigo-500/10 text-indigo-400 border-indigo-500/20";
@@ -268,14 +272,21 @@
                         </td>
                         <td class="py-3.5 px-4">
                             <div class="font-semibold text-white">${r.fullName}</div>
-                            <div class="text-[11px] text-slate-400">ID: ${r.studentId} • ${r.course}</div>
+                            <div class="text-[11px] text-slate-400">ID: ${r.studentId} • ${r.mobile}</div>
                         </td>
                         <td class="py-3.5 px-4">
                             <div class="text-slate-200 font-medium">${docInfo.name}</div>
-                            <div class="text-[11px] text-slate-500">₱${docInfo.price}.00</div>
+                            <div class="text-[11px] text-slate-400">Total Fee: <span class="text-blue-400 font-bold">₱${totalPrice}.00</span></div>
                         </td>
                         <td class="py-3.5 px-4">
-                            <div class="font-mono text-slate-300 bg-slate-950 px-2 py-1 rounded inline-block border border-slate-800">${r.gcashRef}</div>
+                            ${r.claimMethod === 'DELIVERY' 
+                                ? `<span class="px-2 py-0.5 text-[10px] font-bold rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">🚚 DELIVERY</span>
+                                   <p class="text-[10px] text-slate-400 mt-1 max-w-xs truncate">${r.deliveryAddress}</p>`
+                                : `<span class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-800 text-slate-300 border border-slate-700">🏫 PICK-UP</span>`
+                            }
+                        </td>
+                        <td class="py-3.5 px-4">
+                            <div class="font-mono text-slate-300 bg-slate-950 px-2 py-1 rounded inline-block border border-slate-800 text-[11px]">${r.gcashRef}</div>
                         </td>
                         <td class="py-3.5 px-4">
                             <span class="px-2.5 py-1 text-[10px] font-bold rounded-full border ${badgeStyle}">${r.status}</span>
@@ -284,7 +295,7 @@
                             <select onchange="updateStatus('${r.refCode}', this.value)" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg p-1.5 focus:outline-none focus:border-blue-500">
                                 <option value="PENDING" ${r.status==='PENDING'?'selected':''}>Pending</option>
                                 <option value="PROCESSING" ${r.status==='PROCESSING'?'selected':''}>Processing</option>
-                                <option value="READY" ${r.status==='READY'?'selected':''}>Ready for Pickup</option>
+                                <option value="READY" ${r.status==='READY'?'selected':''}>Ready / Out for Delivery</option>
                                 <option value="COMPLETED" ${r.status==='COMPLETED'?'selected':''}>Completed</option>
                             </select>
                         </td>
