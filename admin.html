@@ -72,7 +72,7 @@
                 
                 <div class="flex items-center gap-4">
                     <span class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> System Online
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Sync Active
                     </span>
                     <button onclick="logoutAdmin()" class="px-3.5 py-2 bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-700 hover:border-red-500/30 text-xs font-semibold rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i>
@@ -166,7 +166,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminTableBody" class="divide-y divide-slate-800/60">
-                            <!-- Rows will be injected here -->
+                            <!-- Dynamic rows injected here -->
                         </tbody>
                     </table>
                 </div>
@@ -187,6 +187,13 @@
         };
 
         let currentFilter = 'ALL';
+
+        // REAL-TIME STORAGE SYNC LISTENER
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'doc_requests') {
+                loadDashboard(); // Auto-refresh when student submits new request
+            }
+        });
 
         function loginAdmin() {
             if (document.getElementById('adminPass').value === 'admin123') {
