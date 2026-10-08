@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Document Request Portal - DCSR_Edulink Solutions</title>
+    <title>Student Document Request Portal - Edulink Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,7 +30,7 @@
                     <i class="fa-solid fa-graduation-cap text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-base text-white leading-tight tracking-tight">DCSR_Edulink Portal</h1>
+                    <h1 class="font-bold text-base text-white leading-tight tracking-tight">Edulink Portal</h1>
                     <p class="text-[11px] text-slate-400">Online Student Services</p>
                 </div>
             </div>
@@ -56,8 +56,8 @@
             <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-xl space-y-2">
                 <span class="px-3 py-1 text-[11px] font-bold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-widest inline-block">Official Registrar Request Portal</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Pick-up or Door-to-Door Courier Delivery.</h2>
-                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Request official documents online, choose whether to pick up at school or deliver to your home address, and pay securely via GCash.</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Request Official Documents Online & Track Real-time.</h2>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Fast, secure, and hassle-free process. Submit your request details, upload GCash payment proof, and track progress anytime.</p>
             </div>
         </div>
 
@@ -68,7 +68,7 @@
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-pen-to-square text-blue-400"></i> Document Application Form
                     </h3>
-                    <span class="text-[11px] text-slate-500">* All required fields</span>
+                    <span class="text-[11px] text-slate-500">* All fields are required</span>
                 </div>
 
                 <form id="docRequestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
@@ -87,7 +87,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address *</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email Address (for updates) *</label>
                             <input type="email" id="email" required placeholder="juan.delacruz@example.com" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
                         </div>
                         <div>
@@ -115,42 +115,15 @@
                         </div>
                     </div>
 
-                    <!-- FULFILLMENT METHOD (PICKUP OR DELIVERY) -->
-                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
-                        <label class="block text-xs font-semibold text-blue-400 uppercase tracking-wider">Option: How do you want to receive your document? *</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
-                                <input type="radio" name="claimMethod" value="PICKUP" checked onchange="toggleDeliveryAddress()" class="accent-blue-500">
-                                <div>
-                                    <span class="text-xs font-bold text-white block">🏫 School Pick-up</span>
-                                    <span class="text-[10px] text-slate-400">Registrar Office (Free)</span>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition">
-                                <input type="radio" name="claimMethod" value="DELIVERY" onchange="toggleDeliveryAddress()" class="accent-blue-500">
-                                <div>
-                                    <span class="text-xs font-bold text-white block">🚚 Express Courier Delivery</span>
-                                    <span class="text-[10px] text-slate-400">Door-to-door (+₱150.00 Fee)</span>
-                                </div>
-                            </label>
-                        </div>
-
-                        <!-- DELIVERY ADDRESS BOX (HIDDEN BY DEFAULT) -->
-                        <div id="deliveryAddressBox" class="hidden pt-2">
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Complete Delivery Address (House No., Street, Brgy, City/Province) *</label>
-                            <textarea id="deliveryAddress" rows="2" placeholder="e.g. Block 5 Lot 12, Sunrise Village, Brgy. San Jose, Santa Rosa City, Laguna" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 transition"></textarea>
-                        </div>
-                    </div>
-
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1.5">Purpose of Request *</label>
-                        <textarea id="purpose" rows="2" required placeholder="Employment application, Board Examination, Transfer, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
+                        <textarea id="purpose" rows="2" required placeholder="Employment application, Board Examination, Transferring to another school, etc." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
                     </div>
 
                     <!-- SUMMARY & ACTION -->
                     <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
                         <div>
-                            <span class="text-[11px] text-slate-400 block uppercase font-medium">Total Amount Payable</span>
+                            <span class="text-[11px] text-slate-400 block uppercase font-medium">Estimated Processing Fee</span>
                             <span id="priceDisplay" class="text-2xl font-extrabold text-blue-400">₱0.00</span>
                         </div>
                         <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition duration-200 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
@@ -201,16 +174,15 @@
                         </div>
                         <div id="step-ready" class="text-center space-y-2 opacity-50">
                             <div class="w-8 h-8 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-slate-300"><i class="fa-solid fa-box-archive"></i></div>
-                            <span id="stepReadyLabel" class="text-[10px] font-bold block uppercase text-slate-400">Ready</span>
+                            <span class="text-[10px] font-bold block uppercase text-slate-400">Ready for Pickup</span>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-900 p-4 rounded-xl border border-slate-800">
                         <div><span class="text-slate-400">Student Name:</span> <p id="trName" class="font-semibold text-white mt-0.5">---</p></div>
                         <div><span class="text-slate-400">Document Requested:</span> <p id="trDoc" class="font-semibold text-white mt-0.5">---</p></div>
-                        <div><span class="text-slate-400">Fulfillment Method:</span> <p id="trMethod" class="font-semibold text-blue-400 mt-0.5">---</p></div>
+                        <div><span class="text-slate-400">Date Applied:</span> <p id="trDate" class="font-semibold text-white mt-0.5">---</p></div>
                         <div><span class="text-slate-400">GCash Ref No.:</span> <p id="trGcash" class="font-mono font-semibold text-white mt-0.5">---</p></div>
-                        <div id="trAddrRow" class="col-span-1 sm:col-span-2 hidden"><span class="text-slate-400">Delivery Address:</span> <p id="trAddr" class="font-semibold text-white mt-0.5">---</p></div>
                     </div>
                 </div>
             </div>
@@ -228,7 +200,7 @@
                     <i class="fa-solid fa-qrcode text-xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-white">GCash Payment Verification</h3>
-                <p class="text-xs text-slate-400">Scan QR Code or send total amount to our GCash account.</p>
+                <p class="text-xs text-slate-400">Scan QR Code or send the exact amount to our official account.</p>
             </div>
 
             <div class="bg-slate-950 p-4 rounded-2xl text-center space-y-2 border border-slate-800">
@@ -277,28 +249,10 @@
 
         let tempFormData = {};
 
-        function toggleDeliveryAddress() {
-            const method = document.querySelector('input[name="claimMethod"]:checked').value;
-            const addrBox = document.getElementById('deliveryAddressBox');
-            if (method === 'DELIVERY') {
-                addrBox.classList.remove('hidden');
-                document.getElementById('deliveryAddress').setAttribute('required', 'required');
-            } else {
-                addrBox.classList.add('hidden');
-                document.getElementById('deliveryAddress').removeAttribute('required');
-            }
-            updatePrice();
-        }
-
         function updatePrice() {
             const val = document.getElementById('docType').value;
             const doc = DOCUMENT_TYPES.find(d => d.id === val);
-            let price = doc ? doc.price : 0;
-            
-            const method = document.querySelector('input[name="claimMethod"]:checked').value;
-            if (method === 'DELIVERY' && doc) {
-                price += 150; // Delivery fee
-            }
+            const price = doc ? doc.price : 0;
             document.getElementById('priceDisplay').innerText = `₱${price.toFixed(2)}`;
         }
 
@@ -319,8 +273,6 @@
 
         function handleFormSubmit(e) {
             e.preventDefault();
-            const method = document.querySelector('input[name="claimMethod"]:checked').value;
-            
             tempFormData = {
                 studentId: document.getElementById('studentId').value,
                 fullName: document.getElementById('fullName').value,
@@ -328,8 +280,6 @@
                 mobile: document.getElementById('mobile').value,
                 course: document.getElementById('course').value,
                 docType: document.getElementById('docType').value,
-                claimMethod: method,
-                deliveryAddress: method === 'DELIVERY' ? document.getElementById('deliveryAddress').value : 'N/A (School Pick-up)',
                 purpose: document.getElementById('purpose').value,
                 date: new Date().toLocaleDateString()
             };
@@ -353,7 +303,7 @@
             toggleModal('paymentModal');
             alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
             document.getElementById('docRequestForm').reset();
-            toggleDeliveryAddress();
+            updatePrice();
 
             document.getElementById('trackRefInput').value = refCode;
             switchTab('tracker');
@@ -372,19 +322,9 @@
                 document.getElementById('trName').innerText = found.fullName;
                 const docObj = DOCUMENT_TYPES.find(d => d.id === found.docType);
                 document.getElementById('trDoc').innerText = docObj ? docObj.name : found.docType;
-                document.getElementById('trMethod').innerText = found.claimMethod === 'DELIVERY' ? '🚚 Express Delivery' : '🏫 School Pick-up';
+                document.getElementById('trDate').innerText = found.date;
                 document.getElementById('trGcash').innerText = found.gcashRef;
                 
-                const addrRow = document.getElementById('trAddrRow');
-                if (found.claimMethod === 'DELIVERY') {
-                    addrRow.classList.remove('hidden');
-                    document.getElementById('trAddr').innerText = found.deliveryAddress;
-                    document.getElementById('stepReadyLabel').innerText = 'Out for Delivery';
-                } else {
-                    addrRow.classList.add('hidden');
-                    document.getElementById('stepReadyLabel').innerText = 'Ready for Pickup';
-                }
-
                 const badge = document.getElementById('trBadge');
                 badge.innerText = found.status;
                 
