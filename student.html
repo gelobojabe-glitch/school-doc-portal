@@ -277,12 +277,23 @@
 
         let tempFormData = {};
 
-        // REAL-TIME STORAGE SYNC LISTENER
+        // BROADCAST CHANNEL AND STORAGE EVENT LISTENERS FOR LIVE SYNC
+        const portalChannel = new BroadcastChannel('edulink_sync_channel');
+
+        portalChannel.onmessage = (event) => {
+            if (event.data.type === 'STATUS_UPDATED') {
+                const currentRef = document.getElementById('trackRefInput').value.trim();
+                if (currentRef) {
+                    trackRequest(); // Refresh tracker instantly
+                }
+            }
+        };
+
         window.addEventListener('storage', (e) => {
             if (e.key === 'doc_requests') {
                 const currentRef = document.getElementById('trackRefInput').value.trim();
                 if (currentRef) {
-                    trackRequest(); // Refresh tracker instantly when admin changes status
+                    trackRequest();
                 }
             }
         });
@@ -359,6 +370,9 @@
             let requests = JSON.parse(localStorage.getItem('doc_requests') || '[]');
             requests.push(requestRecord);
             localStorage.setItem('doc_requests', JSON.stringify(requests));
+
+            // I-broadcast sa Admin tab
+            portalChannel.postMessage({ type: 'NEW_REQUEST', data: requestRecord });
 
             toggleModal('paymentModal');
             alert(`Request Submitted Successfully!\nYour Reference Code is: ${refCode}`);
